@@ -1,0 +1,36 @@
+﻿@inherits ViewPage
+@{
+    ViewBag.Title = "Yet Another Question And Answer Platform";
+}
+<div>
+    <div>
+        <div class="row">
+            <div class="col-md-8">
+                <input class="form-control input-lg" id="Search" type="text" placeholder="search">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-lg" type="submit">Ask a new question</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <p id="searchResult" style="margin-top: 15px; font-size: large"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#Search').keyup(function () {
+        var search = $('#Search').val();
+        if (search) {
+            $.getJSON('/search/' + search)
+                .success(function (response) {
+                    $('#searchResult').html(response.Result);
+                });
+        } else {
+            $('#searchResult').html('');
+        }
+    });
+</script>
+
