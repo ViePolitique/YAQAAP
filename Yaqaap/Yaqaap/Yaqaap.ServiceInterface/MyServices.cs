@@ -10,14 +10,16 @@ namespace Yaqaap.ServiceInterface
 {
     public class MyServices : Service
     {
-        public object Any(Hello request)
+        public object Any(Ask request)
         {
-            return new HelloResponse { Result = $"Hello, {request.Name}!" };
+            AskResponse response = new AskResponse();
+
+            return response;
         }
 
         public object Any(Search request)
         {
-            return new HelloResponse { Result = "No similar question found... yet !" };
+            return new SearchResponse { Result = "No similar question found... yet !" };
         }
     }
 }
