@@ -103,25 +103,47 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\components\angular-sanitize\angular-sanitize.js" />
+    <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js" />
+    <Content Include="Content\components\angular\angular.js" />
+    <Content Include="Content\components\angular\angular.min.js" />
+    <Content Include="Content\components\bootstrap-markdown\css\bootstrap-markdown.min.css" />
+    <Content Include="Content\components\bootstrap-markdown\js\bootstrap-markdown.js" />
+    <Content Include="Content\components\bootstrap-markdown\locale\bootstrap-markdown.fr.js" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput-angular.js" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput-angular.min.js" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput-angular.min.js.map" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput.css" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput.js" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput.min.js" />
+    <Content Include="Content\components\bootstrap-tagsinput\dist\bootstrap-tagsinput.min.js.map" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="Content\components\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Content\components\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\components\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\components\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\components\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Content\components\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Content\components\bootstrap\dist\js\npm.js" />
+    <Content Include="Content\components\jquery\dist\jquery.js" />
+    <Content Include="Content\components\jquery\dist\jquery.min.js" />
+    <Content Include="Content\components\jquery\dist\jquery.min.map" />
+    <Content Include="Content\components\markdown-js\dist\markdown.js" />
+    <Content Include="Content\components\markdown-js\dist\markdown.min.js" />
+    <Content Include="Content\components\to-markdown\dist\to-markdown.js" />
     <Content Include="Content\yaqaap.css" />
     <Content Include="Content\_Ask.html" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\_Search.html" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Scripts\jquery-1.9.0.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.9.0.js" />
-    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="Content\components\angular\angular.min.js.map" />
+    <Content Include="Content\controller.js" />
     <Content Include="Web.config" />
-    <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHost.cs" />
@@ -134,6 +156,8 @@
     <Content Include="packages.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="default.cshtml" />
+    <Content Include="Fonts\Tangerine_Bold.ttf" />
+    <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -150,6 +174,9 @@
       <Project>{3B964640-9CA0-4868-A11B-8924C02A99CB}</Project>
       <Name>Yaqaap.ServiceModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

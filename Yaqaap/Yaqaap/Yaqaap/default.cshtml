@@ -1,14 +1,8 @@
 ﻿@inherits ViewPage
 @{
-    ViewBag.Title = "Yet Another Question And Answer Platform";
+    ViewBag.Title = "Yet another question and answer platform";
 }
-<div>
-    <div id="content">
+<div ng-controller="yaqqapController">
+    <div id="content" ng-include src="partialView.url" >
     </div>
 </div>
-<script>
-    
-    $('#content').load("Content/_Search.html").fadeIn(400);
-
-</script>
-

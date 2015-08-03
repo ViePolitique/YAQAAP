@@ -1,49 +1,94 @@
-﻿
+﻿/* Title */
+
+@font-face {
+    font-family: 'Yaqaap';
+    src: url('../fonts/Tangerine_Bold.ttf');
+}
+
+.navbar-brand {
+    font-family: Yaqaap;
+    font-size: 240%;
+}
+
+.container h1 {
+    font-family: Yaqaap;
+    font-size: 500%;
+}
+
+/*callouts*/
+
 .bs-callout {
     padding: 20px;
-    /*margin: 20px 0;*/
+    margin: 20px 0;
     border: 1px solid #eee;
     border-left-width: 5px;
-    border-radius: 3px
+    border-radius: 3px;
 }
 
-.bs-callout h4 {
-    margin-top: 0;
-    margin-bottom: 5px
-}
+    .bs-callout h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
 
-.bs-callout p:last-child {
-    margin-bottom: 0
-}
+    .bs-callout p:last-child {
+        margin-bottom: 0;
+    }
 
-.bs-callout code {
-    border-radius: 3px
-}
+    .bs-callout code {
+        border-radius: 3px;
+    }
 
-.bs-callout+.bs-callout {
-    margin-top: -5px
-}
+    .bs-callout + .bs-callout {
+        margin-top: -5px;
+    }
 
 .bs-callout-danger {
-    border-left-color: #ce4844
+    border-left-color: #ce4844;
 }
 
-.bs-callout-danger h4 {
-    color: #ce4844
-}
+    .bs-callout-danger h4 {
+        color: #ce4844;
+    }
 
 .bs-callout-warning {
-    border-left-color: #aa6708
+    border-left-color: #aa6708;
 }
 
-.bs-callout-warning h4 {
-    color: #aa6708
-}
+    .bs-callout-warning h4 {
+        color: #aa6708;
+    }
 
 .bs-callout-info {
-    border-left-color: #1b809e
+    border-left-color: #1b809e;
 }
 
-.bs-callout-info h4 {
-    color: #1b809e
+    .bs-callout-info h4 {
+        color: #1b809e;
+    }
+
+
+
+/*tags*/
+
+.tag {
+    font-size: 100%;
+}
+
+.bootstrap-tagsinput:focus {
+    border-color: #66afe9;
+}
+
+/*md-editor*/
+
+.md-editor textarea {
+    padding: 0 6px;
+    background: white;
+    font-size: 18px;
+    line-height: 1.3333333;
+    border: none;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.md-editor {
+    border-radius: 6px;
 }

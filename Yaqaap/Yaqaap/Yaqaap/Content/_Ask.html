@@ -1,14 +1,146 @@
 ﻿
-<div class="row" id="askRow">
+
+<div class="row" id="askRow" ng-controller="askController">
     <div class="col-md-8">
-        <input class="form-control input-lg" id="question" type="text" placeholder="question">
-    </div>
-    <div class="col-md-4">
-        <div class="bs-callout bs-callout-info">
-            <h4 class="panel-title">Did you know ?</h4>
-            <p>
-                This is a tooltip
-            </p>
-        </div>
+        <form>
+            <div class="form-group">
+                <input class="form-control input-lg" id="question-title" type="text" placeholder="what is your question ?">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="question-detail" ng-model="questionDetail" rows="5" placeholder="enter more details here" ng-change="updateMarkdownPreview(questionDetail)"></textarea>
+                <div class="bs-callout bs-callout-info" ng-show="markdownPreview != ''">
+                    <p ng-bind-html="markdownPreview"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <input id="question-tags" type="text" placeholder="add a some tags" data-role="tagsinput">
+            </div>
+            <button class="btn btn-primary btn-lg" id="askButton" type="submit">Post your question</button>
+        </form>
     </div>
 </div>
+
+<div id="tooltip-question-title" style="display: none">
+    <p>
+        We prefer questions that can be answered, not just discussed.
+    </p>
+    <p>
+        Provide details. Share your research.
+    </p>
+</div>
+<div id="tooltip-question-detail" style="display: none">
+    <ul>
+        <li> put returns between paragraphs</li>
+        <li>for linebreak add 2 spaces at end</li>
+        <li><i>_italic_</i> or <b>**bold**</b></li>
+        <li>indent code by 4 spaces</li>
+        <li>backtick escapes `like _so_`</li>
+        <li>quote by placing > at start of line</li>
+        <li>
+            to make links :
+            <ul>
+                <li>&lt;http://foo.com&gt;</li>
+                <li>[foo](http://foo.com)</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div id="tooltip-question-tags" style="display: none">
+    <p>
+        A tag is a keyword or label that categorizes your question with other, similar questions.
+    </p>
+    <ul>
+        <li> favor existing popular tags; avoid creating new tags</li>
+        <li>use common abbreviations</li>
+        <li>don't include synonyms</li>
+        <li>combine multiple words into single-words with dashes</li>
+        <li>maximum of 5 tags, 25 chars per tag</li>
+        <li>tag characters: [a-z 0-9 + # - .]</li>
+        <li>delimit tags by space, semicolon, or comma</li>
+    </ul>
+</div>
+
+<script>
+
+    $('[data-toggle="popover"]').popover();
+
+    $("#question-title").popover({
+        html: true,
+        trigger: "focus",
+        container: "body",
+        content: function () {
+            return $('#tooltip-question-title').html();
+        },
+        title: function () {
+            return "How to ask ?";
+        }
+    });
+
+    $("#question-detail").popover({
+        html: true,
+        trigger: "focus",
+        container: "body",
+        content: function () {
+            return $('#tooltip-question-detail').html();
+        },
+        title: function () {
+            return "How to format ?";
+        }
+    });
+
+    $("#question-tags").popover({
+        html: true,
+        trigger: "focus",
+        container: "body",
+        content: function () {
+            return $('#tooltip-question-tags').html();
+        },
+        title: function () {
+            return "How to tag ?";
+        }
+    });
+
+
+    var questionTags = $("#question-tags");
+    questionTags.tagsinput({
+        tagClass: 'label label-info tag',
+        maxTags: 5,
+        maxChars: 25,
+        confirmKeys: [32, 13, 44, 59],
+        trimValue: true
+    });
+    questionTags.tagsinput('refresh');
+    var internalInput = questionTags.tagsinput('input');
+    internalInput.attr('class', 'form-control input-lg');
+    internalInput.css('display', 'inline-block');
+    $('.bootstrap-tagsinput').css('display', 'block');
+
+    questionTags.prev().popover({
+        html: true,
+        trigger: "focus",
+        container: "body",
+        content: function () {
+            return $('#tooltip-question-tags').html();
+        },
+        title: function () {
+            return "How to tag ?";
+        }
+    });
+
+    internalInput.keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9\-\. +,;#]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+    $("#question-detail").markdown({
+        resize: 'vertical',
+        hiddenButtons:['Preview']
+    });
+
+</script>
