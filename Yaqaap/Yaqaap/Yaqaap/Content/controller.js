@@ -1,4 +1,4 @@
-﻿var yaqaap = angular.module("yaqaap", ['ngSanitize']);
+﻿var yaqaap = angular.module("yaqaap", ["ngSanitize", "ngAnimate"]);
 yaqaap.controller("yaqqapController", ["$scope", yaqqapController]);
 yaqaap.controller("askController", ["$scope", askController]);
 
@@ -12,11 +12,11 @@ function yaqqapController($scope) {
     vm.partialViews["search"] = { url: "/Content/_Search.html" };
     vm.partialViews["ask"] = { url: "/Content/_Ask.html" };
 
-    $scope.partialView = vm.partialViews["search"];
-
-    $scope.showAskView = function () {
-        $scope.partialView = vm.partialViews["ask"];
+    $scope.switchView = function (route) {
+        $scope.partialView = vm.partialViews[route];
     };
+
+    $scope.switchView("search");
 };
 
 function askController($scope) {

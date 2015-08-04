@@ -103,6 +103,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\components\angular-animate\angular-animate.js" />
+    <Content Include="Content\components\angular-animate\angular-animate.min.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js" />
     <Content Include="Content\components\angular\angular.js" />
@@ -158,6 +160,7 @@
     <Content Include="default.cshtml" />
     <Content Include="Fonts\Tangerine_Bold.ttf" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js.map" />
+    <Content Include="Content\components\angular-animate\angular-animate.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
