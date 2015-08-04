@@ -105,8 +105,12 @@
   <ItemGroup>
     <Content Include="Content\components\angular-animate\angular-animate.js" />
     <Content Include="Content\components\angular-animate\angular-animate.min.js" />
+    <Content Include="Content\components\angular-route\angular-route.js" />
+    <Content Include="Content\components\angular-route\angular-route.min.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js" />
+    <Content Include="Content\components\angular-servicestack\dist\angular-servicestack-0.2.0-min.js" />
+    <Content Include="Content\components\angular-servicestack\dist\angular-servicestack-0.2.0.js" />
     <Content Include="Content\components\angular\angular.js" />
     <Content Include="Content\components\angular\angular.min.js" />
     <Content Include="Content\components\bootstrap-markdown\css\bootstrap-markdown.min.css" />
@@ -161,6 +165,8 @@
     <Content Include="Fonts\Tangerine_Bold.ttf" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js.map" />
     <Content Include="Content\components\angular-animate\angular-animate.min.js.map" />
+    <Content Include="Content\components\angular-route\angular-route.min.js.map" />
+    <Content Include="Content\_NotFound.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Funq;
 using ServiceStack;
@@ -33,6 +34,10 @@ namespace Yaqaap
             //this.Plugins.Add(new CorsFeature());
 
             this.Plugins.Add(new RazorFormat());
+
+            // Hack pour que le F5 fonctionne avec angular-route
+            this.CustomErrorHttpHandlers[HttpStatusCode.NotFound] = new RazorHandler("/");
+            //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
         }
     }
 }

@@ -3,7 +3,7 @@
         <input class="form-control input-lg" id="search" type="text" placeholder="search">
     </div>
     <div class="col-md-4">
-        <button class="btn btn-primary btn-lg" id="askButton" type="submit" ng-click="switchView('ask')" >Ask a new question</button>
+        <a class="btn btn-primary btn-lg" id="askButton" href="/Ask">Ask a new question</a>
     </div>
 </div>
 
@@ -30,11 +30,5 @@
             });
         }
     });
-
-    //$('#askButton').click(function (event) {
-    //    $('#content').fadeOut(400, function() {
-    //        $('#content').load("Content/_Ask.html").fadeIn(400);
-    //    });
-    //});
 
 </script>
