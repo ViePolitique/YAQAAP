@@ -41,7 +41,26 @@ function searchController($scope) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
-}
+
+    $scope.searchChange = function () {
+
+        if ($scope.search) {
+            $scope.questions = [
+                { Title: "Question 1" },
+                { Title: "Question 2" },
+                { Title: "Question 3" }
+            ];
+        } else {
+            $scope.questions = undefined;
+        }
+
+        //$.getJSON('/search/' + search)
+        //      .success(function (response) {
+        //          $('#searchResult').html(response.Result);
+        //          $('#searchResultRow').fadeIn(400);
+        //      });
+    };
+};
 
 
 function askController($scope) {

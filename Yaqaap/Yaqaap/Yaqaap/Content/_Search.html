@@ -1,34 +1,21 @@
 ﻿<div class="row" id="searchRow">
     <div class="col-md-8">
-        <input class="form-control input-lg" id="search" type="text" placeholder="search">
+        <input class="form-control input-lg" ng-model="search" id="search" ng-change="searchChange()" type="text" placeholder="search">
     </div>
     <div class="col-md-4">
         <a class="btn btn-primary btn-lg" id="askButton" href="/Ask">Ask a new question</a>
     </div>
 </div>
 
-<div class="row" id="searchResultRow" style="display: none">
+<div class="row yaqaap-fade" id="searchResultRow" ng-if="questions!=undefined">
+
+    <hr />
+
     <div class="col-md-12">
-        <p id="searchResult" style="margin-top: 15px; font-size: large"></p>
+        <div ng-repeat="question in questions">
+            <div>{{question.Title}}</div>
+        </div>
     </div>
 </div>
 
-
-<script>
-
-    $('#search').keyup(function () {
-        var search = $('#search').val();
-        if (search) {
-            $.getJSON('/search/' + search)
-                .success(function (response) {
-                    $('#searchResult').html(response.Result);
-                    $('#searchResultRow').fadeIn(400);
-                });
-        } else {
-            $('#searchResultRow').fadeOut(400, function () {
-                $('#searchResult').html('');
-            });
-        }
-    });
-
-</script>
+<hr />
