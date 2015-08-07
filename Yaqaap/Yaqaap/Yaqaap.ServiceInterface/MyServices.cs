@@ -19,7 +19,17 @@ namespace Yaqaap.ServiceInterface
 
         public object Any(Search request)
         {
-            return new SearchResponse { Result = "No similar question found... yet !" };
+            return new SearchResponse
+            {
+                Questions = new[]
+                            {
+                                new SearchQuestionResponse() { Title = "Question 1"},
+                                new SearchQuestionResponse() { Title = "Question 2"},
+                                new SearchQuestionResponse() { Title = "Question 3"},
+                                new SearchQuestionResponse() { Title = "Question 4"},
+                            }
+                // "No similar question found... yet !"
+            };
         }
     }
 }

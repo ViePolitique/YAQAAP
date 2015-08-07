@@ -7,9 +7,14 @@ namespace Yaqaap.ServiceModel
     {
         public string Question { get; set; }
     }
-    
+
     public class SearchResponse
     {
-        public string Result { get; set; }
+        public SearchQuestionResponse[] Questions { get; set; }
+    }
+
+    public class SearchQuestionResponse
+    {
+        public string Title { get; set; }
     }
 }

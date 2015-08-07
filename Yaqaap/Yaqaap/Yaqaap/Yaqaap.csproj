@@ -109,8 +109,6 @@
     <Content Include="Content\components\angular-route\angular-route.min.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.js" />
     <Content Include="Content\components\angular-sanitize\angular-sanitize.min.js" />
-    <Content Include="Content\components\angular-servicestack\dist\angular-servicestack-0.2.0-min.js" />
-    <Content Include="Content\components\angular-servicestack\dist\angular-servicestack-0.2.0.js" />
     <Content Include="Content\components\angular\angular.js" />
     <Content Include="Content\components\angular\angular.min.js" />
     <Content Include="Content\components\bootstrap-markdown\css\bootstrap-markdown.min.css" />
