@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Yaqaap.Framework;
 
-namespace Yaqaap.ServiceInterface.TableRepository
+namespace Yaqaap.ServiceInterface.TableRepositories
 {
     public class Tables
     {
         public const string Questions = "questions";
+        public const string Indexes = "indexes";
         public const string Answers = "answers";
         public const string Users = "users";
     }
@@ -31,8 +29,8 @@ namespace Yaqaap.ServiceInterface.TableRepository
 
         public TableRepository()
         {
-            if (StorageConfig.ConnexionString != null)
-                _storageAccount = CloudStorageAccount.Parse(StorageConfig.ConnexionString);
+            if (StorageConfig.StorageConnexionString != null)
+                _storageAccount = CloudStorageAccount.Parse(StorageConfig.StorageConnexionString);
         }
 
 
@@ -90,7 +88,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
 
                 return false;
             }
@@ -118,7 +116,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
 
                 return false;
             }
@@ -150,7 +148,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
             }
         }
 
@@ -179,7 +177,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
 
                 return false;
             }
@@ -232,7 +230,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
                 return false;
             }
         }
@@ -310,7 +308,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
                 return false;
             }
         }
@@ -325,18 +323,18 @@ namespace Yaqaap.ServiceInterface.TableRepository
             return nextId;
         }
 
-        public bool ExecuteBatch(string table, List<TableOperation> operations)
+        public bool ExecuteBatch(string table, TableOperation[] operations)
         {
             return ExecuteBatch(GetTable(table), operations);
         }
 
-        private bool ExecuteBatch(CloudTable table, List<TableOperation> operations)
+        private bool ExecuteBatch(CloudTable table, TableOperation[] operations)
         {
             try
             {
                 TableBatchOperation batch = new TableBatchOperation();
 
-                for (int i = 0; i < operations.Count; i++)
+                for (int i = 0; i < operations.Length; i++)
                 {
                     // Create the Delete TableOperation
                     batch.Add(operations[i]);
@@ -357,7 +355,7 @@ namespace Yaqaap.ServiceInterface.TableRepository
             }
             catch (Exception ex)
             {
-                LogHelper.GetLogger().Error(ex.ToString(), ex);
+                //LogHelper.GetLogger().Error(ex.ToString(), ex);
                 return false;
             }
         }

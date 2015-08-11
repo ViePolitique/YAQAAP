@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Web;
 using Funq;
 using ServiceStack;
 using ServiceStack.Razor;
+using Yaqaap.Framework;
 using Yaqaap.ServiceInterface;
 
 namespace Yaqaap
@@ -38,6 +40,8 @@ namespace Yaqaap
             // Hack pour que le F5 fonctionne avec angular-route
             this.CustomErrorHttpHandlers[HttpStatusCode.NotFound] = new RazorHandler("/");
             //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
+
+            StorageConfig.StorageConnexionString = ConfigurationManager.AppSettings["storage"];
         }
     }
 }
