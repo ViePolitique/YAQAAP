@@ -7,10 +7,12 @@ using ServiceStack;
 
 namespace Yaqaap.ServiceModel
 {
-    [Route("/ask/{Question}")]
+    [Route("/ask")]
     public class Ask : IReturn<AskResponse>
     {
-        public string Question { get; set; }
+        public string Title { get; set; }
+        public string Detail { get; set; }
+        public string [] Tags { get; set; }
     }
 
     public class AskResponse

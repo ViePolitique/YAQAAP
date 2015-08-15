@@ -42,6 +42,15 @@ namespace Yaqaap
             //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
 
             StorageConfig.StorageConnexionString = ConfigurationManager.AppSettings["storage"];
+
         }
+
+        public override RouteAttribute[] GetRouteAttributes(Type requestType)
+        {
+            var routes = base.GetRouteAttributes(requestType);
+            routes.Each(x => x.Path = "/api" + x.Path);
+            return routes;
+        }
+
     }
 }

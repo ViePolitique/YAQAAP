@@ -16,6 +16,7 @@ namespace Yaqaap.ServiceInterface
         public object Any(Ask request)
         {
             AskResponse response = new AskResponse();
+            response.Result = "OK";
 
             return response;
         }
