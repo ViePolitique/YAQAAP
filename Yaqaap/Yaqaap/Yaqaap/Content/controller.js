@@ -24,7 +24,7 @@ yaqaap.config([
 
 
 yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
-yaqaap.controller("askController", ["$scope, $http", askController]);
+yaqaap.controller("askController", ["$scope", "$http", askController]);
 yaqaap.controller("searchController", ["$scope", "$http", searchController]);
 
 
