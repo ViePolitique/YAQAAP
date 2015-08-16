@@ -116,7 +116,7 @@ function askController($scope, $http) {
                 tags: $scope.questionTags.split(",")
             };
 
-            $http.get("/api/ask", askData)
+            $http.post("/api/ask", askData)
                 .success(function (data, status, headers, config) {
                     // do what you do
                     $scope.askResult = data.Result;

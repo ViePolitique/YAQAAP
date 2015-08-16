@@ -10,8 +10,8 @@ namespace Yaqaap.ServiceInterface.TableRepositories
 
         public IndexEntry(string id, string term)
         {
-            PartitionKey = term;
-            RowKey = id;
+            PartitionKey = id;
+            RowKey = term;
         }
     }
 }

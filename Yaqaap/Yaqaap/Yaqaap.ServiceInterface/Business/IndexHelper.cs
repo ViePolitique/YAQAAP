@@ -10,14 +10,14 @@ namespace Yaqaap.ServiceInterface.Business
 {
     class IndexHelper
     {
-        public void CreateIndex(string id, string content, string table)
+        public static void CreateIndex(string id, string content, string table)
         {
             TableRepository tableRepository = new TableRepository();
 
 
             content = content.ToLowerInvariant();
 
-            string[] terms = content.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            var terms = content.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
             TableOperation[] toInsert = terms.Select(term => TableOperation.InsertOrMerge(new IndexEntry(id, term))).ToArray();
 
@@ -40,8 +40,8 @@ namespace Yaqaap.ServiceInterface.Business
                 var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
 
                 var result = from k in query
-                             where k.PartitionKey == term
-                             select k.RowKey;
+                             where k.RowKey == term
+                             select k.PartitionKey;
 
                 foreach (var id in result)
                 {

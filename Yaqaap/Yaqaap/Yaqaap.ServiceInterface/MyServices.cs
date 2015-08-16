@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ServiceStack;
 using Yaqaap.ServiceInterface.Business;
 using Yaqaap.ServiceInterface.TableRepositories;
@@ -12,6 +13,19 @@ namespace Yaqaap.ServiceInterface
         {
             AskResponse response = new AskResponse();
             response.Result = "OK";
+
+            QuestionEntry questionEntry = new QuestionEntry(Guid.NewGuid(), Guid.Empty)
+            {
+                Title = request.Title,
+                Detail = request.Detail,
+                Creation = DateTime.UtcNow,
+                Tags = string.Join(",", request.Tags).ToLowerInvariant()
+            };
+
+            TableRepository tableRepository = new TableRepository();
+            tableRepository.InsertOrReplace(questionEntry, Tables.Questions);
+
+            IndexHelper.CreateIndex(questionEntry.PartitionKey, request.Title + " " + questionEntry.Tags, Tables.Questions);
 
             return response;
         }
