@@ -17,11 +17,11 @@ namespace Yaqaap.ServiceInterface.Business
 
             content = content.ToLowerInvariant();
 
-            var terms = content.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Distinct();
+            var terms = content.Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
-            TableOperation[] toInsert = terms.Select(term => TableOperation.InsertOrMerge(new IndexEntry(id, term))).ToArray();
+            TableOperation[] toInsert = terms.Select(term => TableOperation.InsertOrMerge(new IndexEntry(id, term, table))).ToArray();
 
-            tableRepository.ExecuteBatch(table, toInsert);
+            tableRepository.ExecuteBatch(Tables.Indexes, toInsert);
 
         }
 
@@ -34,20 +34,26 @@ namespace Yaqaap.ServiceInterface.Business
 
             ConcurrentBag<string> bag = new ConcurrentBag<string>();
 
+
             Parallel.ForEach(terms, term =>
-            {
-                TableRepository tableRepository = new TableRepository();
-                var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
+                                    {
+                                        term = $"{tableName}-{term}";
 
-                var result = from k in query
-                             where k.RowKey == term
-                             select k.PartitionKey;
+                                        term = TableEntityHelper.RemoveDiacritics(term);
+                                        term = TableEntityHelper.ToAzureKeyString(term);
 
-                foreach (var id in result)
-                {
-                    bag.Add(id);
-                }
-            });
+                                        TableRepository tableRepository = new TableRepository();
+                                        var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
+
+                                        var result = from k in query
+                                                     where k.RowKey == term
+                                                     select k.PartitionKey;
+
+                                        foreach (var id in result)
+                                        {
+                                            bag.Add(id);
+                                        }
+                                    });
 
             ConcurrentBag<T> bagResult = new ConcurrentBag<T>();
 
@@ -58,8 +64,8 @@ namespace Yaqaap.ServiceInterface.Business
                 var query = tableRepository.GetTable(tableName).CreateQuery<T>();
 
                 var result = from k in query
-                            where k.PartitionKey == id
-                            select k;
+                             where k.PartitionKey == id
+                             select k;
 
                 foreach (var data in result)
                 {

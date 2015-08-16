@@ -110,6 +110,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableRepositories\IndexEntry.cs" />
     <Compile Include="TableRepositories\QuestionEntry.cs" />
+    <Compile Include="TableRepositories\TableEntityHelper.cs" />
     <Compile Include="TableRepositories\TableRepository.cs" />
   </ItemGroup>
   <ItemGroup>

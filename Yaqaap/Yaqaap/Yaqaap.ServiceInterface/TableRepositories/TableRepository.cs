@@ -31,6 +31,8 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         {
             if (StorageConfig.StorageConnexionString != null)
                 _storageAccount = CloudStorageAccount.Parse(StorageConfig.StorageConnexionString);
+            else
+                _storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
         }
 
 

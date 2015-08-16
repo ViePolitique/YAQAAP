@@ -8,10 +8,13 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         {
         }
 
-        public IndexEntry(string id, string term)
+        public IndexEntry(string id, string term, string table)
         {
             PartitionKey = id;
-            RowKey = term;
+            RowKey = $"{table}-{term}";
+
+            RowKey = TableEntityHelper.RemoveDiacritics(RowKey);
+            RowKey = TableEntityHelper.ToAzureKeyString(RowKey);
         }
     }
 }

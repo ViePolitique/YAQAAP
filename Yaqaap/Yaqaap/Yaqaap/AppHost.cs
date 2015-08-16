@@ -41,7 +41,11 @@ namespace Yaqaap
             this.CustomErrorHttpHandlers[HttpStatusCode.NotFound] = new RazorHandler("/");
             //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
 
+#if DEBUG
+            StorageConfig.StorageConnexionString = null;
+#else
             StorageConfig.StorageConnexionString = ConfigurationManager.AppSettings["storage"];
+#endif
 
         }
 
