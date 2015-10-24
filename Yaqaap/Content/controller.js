@@ -12,6 +12,10 @@ yaqaap.config([
                 templateUrl: "/Content/_Ask.html",
                 controller: "askController"
             })
+            .when("/Answers", {
+                templateUrl: "/Content/_Answers.html",
+                controller: "answersController"
+            })
             .when("/NotFound", {
                 templateUrl: "/Content/_NotFound.html"
             })
@@ -25,6 +29,7 @@ yaqaap.config([
 
 yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
 yaqaap.controller("askController", ["$scope", "$http", askController]);
+yaqaap.controller("answersController", ["$scope", "$http", answersController]);
 yaqaap.controller("searchController", ["$scope", "$http", searchController]);
 
 
@@ -161,6 +166,73 @@ function askController($scope, $http) {
                     }
                 });
         }
+
+    };
+};
+
+
+function answersController($scope, $http) {
+    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
+    var vm = this;
+
+    $scope.question = {
+        'title' : 'This is a question',
+        'detail' :  markdown.toHTML('**This is the details !!!**'),
+    };
+
+    $scope.answers = [
+        {'content' : 'This is an answer'},
+        {'content' : 'This is another answer'},
+        {'content' : 'This is yet another answer'},
+    ];
+
+    $scope.markdownPreview = "";
+
+    $scope.updateMarkdownPreview = function (data) {
+        $scope.markdownPreview = markdown.toHTML(data);
+    };
+
+    $scope.answer = function () {
+
+        if (!$scope.answerContent) {
+            $scope.answerResult = "NeedContent";
+            return;
+        }
+
+
+        var askData = {
+            content: $scope.answerContent
+        };
+
+        //$http.post("/api/ask", askData)
+        //    .success(function (data, status, headers, config) {
+        //        // do what you do
+        //        $scope.askResult = data.Result;
+        //    })
+        //    .error(function (data, status, headers, config) {
+
+        //        $scope.askResult = undefined;
+
+        //        if (status === 401) {
+        //            // handle redirecting to the login page
+        //        } else if (status === 500 || status === 503) {
+        //            // retry the call and eventually handle too many failures
+        //        } else if (data != undefined) {
+        //            if (
+        //                data.responseStatus != null &&
+        //                    data.responseStatus.errors != null &&
+        //                    data.responseStatus.errors.length > 0)
+        //                // handle validation error
+        //            {
+        //                var errors = data.responseStatus.errors;
+        //            } else {
+        //                // handle non validation error
+        //                var errorCode = data.responseStatus.errorCode;
+        //                var message = data.responseStatus.message;
+        //            }
+        //        }
+        //    });
+
 
     };
 };

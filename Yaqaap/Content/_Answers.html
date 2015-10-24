@@ -1,0 +1,45 @@
+﻿
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>{{question.title}}</h2>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p ng-bind-html="question.detail"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="answsersRow">
+    <div class="col-md-8">
+        <div ng-repeat="answer in answers">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {{answer.content}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-8">
+        <form>
+            <div class="form-group">
+                <textarea class="form-control" id="answer-content" ng-model="answerContent" rows="5" placeholder="enter your own answser here" ng-change="updateMarkdownPreview(answerContent)"></textarea>
+                <div class="bs-callout bs-callout-info" ng-show="markdownPreview != ''">
+                    <p ng-bind-html="markdownPreview"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg" id="answerButton" type="submit" ng-click="answer()">Post your answer</button>
+            </div>
+            <div class="form-group">
+                <div ng-if="answerResult == 'OK'" class="alert alert-success" role="alert">Well done, you just post a new answer!</div>
+                <div ng-if="answerResult == 'NeedContent'" class="alert alert-warning" role="alert">Please, give us a litle more content.</div>
+            </div>
+        </form>
+    </div>
+</div>

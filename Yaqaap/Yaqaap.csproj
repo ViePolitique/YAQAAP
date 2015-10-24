@@ -142,6 +142,7 @@
     <Content Include="Content\components\markdown-js\dist\markdown.min.js" />
     <Content Include="Content\components\to-markdown\dist\to-markdown.js" />
     <Content Include="Content\yaqaap.css" />
+    <Content Include="Content\_Answers.html" />
     <Content Include="Content\_Ask.html" />
     <Content Include="Content\_Search.html" />
     <Content Include="Global.asax" />
