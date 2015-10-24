@@ -108,6 +108,22 @@ function askController($scope, $http) {
     };
 
     $scope.ask = function () {
+
+        if (!$scope.questionTitle) {
+            $scope.askResult = "NeedTitle";
+            return;
+        }
+
+        if (!$scope.questionDetail) {
+            $scope.askResult = "NeedDetail";
+            return;
+        }
+
+        if (!$scope.questionTags) {
+            $scope.askResult = "NeedTags";
+            return;
+        }
+
         if ($scope.questionTitle && $scope.questionDetail && $scope.questionTags) {
 
             var askData = {

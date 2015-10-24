@@ -15,12 +15,20 @@
             <div class="form-group">
                 <input id="question-tags" type="text" placeholder="add a some tags" ng-model="questionTags" data-role="tagsinput">
             </div>
-            <button class="btn btn-primary btn-lg" id="askButton" type="submit" ng-click="ask()">Post your question</button>
-        </form>
 
-        <p ng-if="askResult != ''" ng-bind="askResult"></p>
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg" id="askButton" type="submit" ng-click="ask()">Post your question</button>
+            </div>
+            <div class="form-group">
+                <div ng-if="askResult == 'OK'" class="alert alert-success" role="alert">Well done, you just post a new question!</div>
+                <div ng-if="askResult == 'NeedTitle'" class="alert alert-warning" role="alert">Please, enter a question first.</div>
+                <div ng-if="askResult == 'NeedDetail'" class="alert alert-warning" role="alert">Please, give us a litle more details.</div>
+                <div ng-if="askResult == 'NeedTags'" class="alert alert-warning" role="alert">Please, enter one or more Tags.</div>
+            </div>
+        </form>
     </div>
 </div>
+
 
 <div id="tooltip-question-title" style="display: none">
     <p>
@@ -142,7 +150,7 @@
 
     $("#question-detail").markdown({
         resize: 'vertical',
-        hiddenButtons:['Preview']
+        hiddenButtons: ['Preview']
     });
 
 </script>
