@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap", "Yaqaap\Yaqaap\Yaqaap.csproj", "{F629D809-91A0-469A-8C82-E6E23B174B71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap", "Yaqaap\Yaqaap.csproj", "{F629D809-91A0-469A-8C82-E6E23B174B71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.ServiceModel", "Yaqaap\Yaqaap.ServiceModel\Yaqaap.ServiceModel.csproj", "{3B964640-9CA0-4868-A11B-8924C02A99CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.ServiceModel", "Yaqaap.ServiceModel\Yaqaap.ServiceModel.csproj", "{3B964640-9CA0-4868-A11B-8924C02A99CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.ServiceInterface", "Yaqaap\Yaqaap.ServiceInterface\Yaqaap.ServiceInterface.csproj", "{3ADA98B6-22EF-40B2-8D28-F8B21D90A719}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.ServiceInterface", "Yaqaap.ServiceInterface\Yaqaap.ServiceInterface.csproj", "{3ADA98B6-22EF-40B2-8D28-F8B21D90A719}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Tests", "Yaqaap\Yaqaap.Tests\Yaqaap.Tests.csproj", "{001D6711-3171-4162-8D0F-542D447ADF13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Tests", "Yaqaap.Tests\Yaqaap.Tests.csproj", "{001D6711-3171-4162-8D0F-542D447ADF13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Framework", "Yaqaap.Framework\Yaqaap.Framework.csproj", "{01922E2A-FE9E-4C4D-9B17-6E595A7445E0}"
 EndProject
