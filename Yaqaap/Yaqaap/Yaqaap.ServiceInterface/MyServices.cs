@@ -14,7 +14,9 @@ namespace Yaqaap.ServiceInterface
             AskResponse response = new AskResponse();
             response.Result = ErrorCode.OK;
 
-            QuestionEntry questionEntry = new QuestionEntry(Guid.NewGuid(), Guid.Empty)
+            Guid creatorId = Guid.Empty;
+
+            QuestionEntry questionEntry = new QuestionEntry(creatorId, Guid.NewGuid())
             {
                 Title = request.Title,
                 Detail = request.Detail,
@@ -25,7 +27,7 @@ namespace Yaqaap.ServiceInterface
             TableRepository tableRepository = new TableRepository();
             tableRepository.InsertOrReplace(questionEntry, Tables.Questions);
 
-            IndexHelper.CreateIndex(questionEntry.PartitionKey, request.Title + " " + questionEntry.Tags, Tables.Questions);
+            IndexHelper.CreateIndex(questionEntry.GetId(), request.Title + " " + questionEntry.Tags, Tables.Questions);
 
             return response;
         }

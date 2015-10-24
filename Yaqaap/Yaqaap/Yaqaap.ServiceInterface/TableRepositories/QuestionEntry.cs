@@ -9,14 +9,14 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         {
         }
 
-        public QuestionEntry(Guid id, Guid creator)
+        public QuestionEntry(Guid creatorId, Guid questionId)
         {
-            PartitionKey = creator.ToString();
-            RowKey = id.ToString();
+            PartitionKey = creatorId.ToString();
+            RowKey = questionId.ToString();
         }
 
 
-        public Guid GetCreator()
+        public Guid GetCreatorId()
         {
             return Guid.Parse(PartitionKey);
         }

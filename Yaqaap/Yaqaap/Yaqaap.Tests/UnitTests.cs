@@ -10,11 +10,11 @@ namespace Yaqaap.Tests
     [TestFixture]
     public class UnitTests
     {
-        private readonly ServiceStackHost appHost;
+        private readonly ServiceStackHost _appHost;
 
         public UnitTests()
         {
-            appHost = new BasicAppHost(typeof(MyServices).Assembly)
+            _appHost = new BasicAppHost(typeof(MyServices).Assembly)
             {
                 ConfigureContainer = container =>
                 {
@@ -27,13 +27,13 @@ namespace Yaqaap.Tests
         [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
-            appHost.Dispose();
+            _appHost.Dispose();
         }
 
         [Test]
         public void TestMethod1()
         {
-            var service = appHost.Container.Resolve<MyServices>();
+            var service = _appHost.Container.Resolve<MyServices>();
 
             //var response = (HelloResponse)service.Any(new Hello { Name = "World" });
 

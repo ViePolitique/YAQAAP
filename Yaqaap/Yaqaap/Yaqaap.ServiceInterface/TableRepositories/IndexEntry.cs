@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using System;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Yaqaap.ServiceInterface.TableRepositories
 {
@@ -8,9 +9,9 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         {
         }
 
-        public IndexEntry(string id, string term, string table)
+        public IndexEntry(Guid id, string term, string table)
         {
-            PartitionKey = id;
+            PartitionKey = id.ToString();
             RowKey = $"{table}-{term}";
 
             RowKey = TableEntityHelper.RemoveDiacritics(RowKey);

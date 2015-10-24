@@ -10,7 +10,7 @@ namespace Yaqaap.ServiceInterface.Business
 {
     class IndexHelper
     {
-        public static void CreateIndex(string id, string content, string table)
+        public static void CreateIndex(Guid id, string content, string table)
         {
             TableRepository tableRepository = new TableRepository();
 
@@ -37,21 +37,28 @@ namespace Yaqaap.ServiceInterface.Business
 
             Parallel.ForEach(terms, term =>
                                     {
-                                        term = $"{tableName}-{term}";
-
-                                        term = TableEntityHelper.RemoveDiacritics(term);
-                                        term = TableEntityHelper.ToAzureKeyString(term);
-
-                                        TableRepository tableRepository = new TableRepository();
-                                        var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
-
-                                        var result = from k in query
-                                                     where k.RowKey == term
-                                                     select k.PartitionKey;
-
-                                        foreach (var id in result)
+                                        try
                                         {
-                                            bag.Add(id);
+                                            term = $"{tableName}-{term}";
+
+                                            term = TableEntityHelper.RemoveDiacritics(term);
+                                            term = TableEntityHelper.ToAzureKeyString(term);
+
+                                            TableRepository tableRepository = new TableRepository();
+                                            var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
+
+                                            var result = from k in query
+                                                         where k.RowKey == term
+                                                         select k.PartitionKey;
+
+                                            foreach (var id in result)
+                                            {
+                                                bag.Add(id);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            // pas de log ?
                                         }
                                     });
 
