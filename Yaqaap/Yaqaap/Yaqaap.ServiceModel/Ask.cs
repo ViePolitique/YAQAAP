@@ -16,6 +16,6 @@ namespace Yaqaap.ServiceModel
 
     public class AskResponse
     {
-        public string Result { get; set; }
+        public ErrorCode Result { get; set; }
     }
 }

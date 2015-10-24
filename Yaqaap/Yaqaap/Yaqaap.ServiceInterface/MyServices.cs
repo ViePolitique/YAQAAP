@@ -12,7 +12,7 @@ namespace Yaqaap.ServiceInterface
         public object Any(Ask request)
         {
             AskResponse response = new AskResponse();
-            response.Result = "OK";
+            response.Result = ErrorCode.OK;
 
             QuestionEntry questionEntry = new QuestionEntry(Guid.NewGuid(), Guid.Empty)
             {
