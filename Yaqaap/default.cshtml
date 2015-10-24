@@ -1,0 +1,13 @@
+﻿@inherits ViewPage
+@{
+    ViewBag.Title = "Yet another question and answer platform";
+}
+<div ng-controller="yaqqapController as vm">
+    <div id="content" class="yaqaap-fade" ng-view>
+    </div>
+
+    @*<pre>$location.path() = {{vm.$location.path()}}</pre>
+    <pre>$route.current.templateUrl = {{vm.$route.current.templateUrl}}</pre>
+    <pre>$route.current.params = {{vm.$route.current.params}}</pre>
+    <pre>$routeParams = {{vm.$routeParams}}</pre>*@
+</div>
