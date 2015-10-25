@@ -1,4 +1,5 @@
-﻿using ServiceStack;
+﻿using System;
+using ServiceStack;
 
 namespace Yaqaap.ServiceModel
 {
@@ -15,6 +16,7 @@ namespace Yaqaap.ServiceModel
 
     public class SearchQuestionResponse
     {
+        public Guid Id { get; set; }
         public string Title { get; set; }
     }
 }

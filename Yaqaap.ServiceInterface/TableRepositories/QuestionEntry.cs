@@ -3,20 +3,24 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Yaqaap.ServiceInterface.TableRepositories
 {
+    /// <summary>
+    /// PartitionKey : UserId
+    /// RowKey : QuestionId
+    /// </summary>
     public class QuestionEntry : TableEntity
     {
         public QuestionEntry()
         {
         }
 
-        public QuestionEntry(Guid creatorId, Guid questionId)
+        public QuestionEntry(Guid userId, Guid questionId)
         {
-            PartitionKey = creatorId.ToString();
+            PartitionKey = userId.ToString();
             RowKey = questionId.ToString();
         }
 
 
-        public Guid GetCreatorId()
+        public Guid GetUserId()
         {
             return Guid.Parse(PartitionKey);
         }
@@ -33,5 +37,12 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public string Detail { get; set; }
 
         public string Tags { get; set; }
+
+        public long Views { get; set; }
+
+        /// <summary>
+        /// UserId that posted the answer
+        /// </summary>
+        public Guid SelectedAnswer { get; set; }
     }
 }

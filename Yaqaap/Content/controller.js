@@ -12,7 +12,7 @@ yaqaap.config([
                 templateUrl: "/Content/_Ask.html",
                 controller: "askController"
             })
-            .when("/Answers", {
+            .when("/Answers/:questionId", {
                 templateUrl: "/Content/_Answers.html",
                 controller: "answersController"
             })
@@ -29,7 +29,7 @@ yaqaap.config([
 
 yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
 yaqaap.controller("askController", ["$scope", "$http", askController]);
-yaqaap.controller("answersController", ["$scope", "$http", answersController]);
+yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", answersController]);
 yaqaap.controller("searchController", ["$scope", "$http", searchController]);
 
 
@@ -171,26 +171,60 @@ function askController($scope, $http) {
 };
 
 
-function answersController($scope, $http) {
+function answersController($scope, $http, $route, $routeParams) {
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
 
-    $scope.question = {
-        'title' : 'This is a question',
-        'detail' :  markdown.toHTML('**This is the details !!!**'),
-    };
 
-    $scope.answers = [
-        {'content' : 'This is an answer'},
-        {'content' : 'This is another answer'},
-        {'content' : 'This is yet another answer'},
-    ];
+    //$scope.question = {
+    //    'Title': 'This is a question ' + $routeParams.questionId,
+    //    'Detail': markdown.toHTML('**This is the details !!!**'),
+    //};
+
+    //$scope.answers = [
+    //    { 'Content': 'This is an answer' },
+    //    { 'Content': 'This is another answer' },
+    //    { 'Content': 'This is yet another answer' },
+    //];
+
+
 
     $scope.markdownPreview = "";
 
     $scope.updateMarkdownPreview = function (data) {
         $scope.markdownPreview = markdown.toHTML(data);
     };
+
+    $http.get("/api/answers/" + $routeParams.questionId)
+                   .success(function (data, status, headers, config) {
+                       // do what you do
+                       $scope.question = data;
+                       $scope.question.Detail = markdown.toHTML($scope.question.Detail);
+                   })
+                   .error(function (data, status, headers, config) {
+
+                       $scope.question = undefined;
+                       //$scope.answers = undefined;
+
+                       if (status === 401) {
+                           // handle redirecting to the login page
+                       } else if (status === 500 || status === 503) {
+                           // retry the call and eventually handle too many failures
+                       } else if (data != undefined) {
+                           if (
+                               data.responseStatus != null &&
+                               data.responseStatus.errors != null &&
+                               data.responseStatus.errors.length > 0)
+                               // handle validation error
+                           {
+                               var errors = data.responseStatus.errors;
+                           } else {
+                               // handle non validation error
+                               var errorCode = data.responseStatus.errorCode;
+                               var message = data.responseStatus.message;
+                           }
+                       }
+                   });
 
     $scope.answer = function () {
 

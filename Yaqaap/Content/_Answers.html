@@ -1,22 +1,28 @@
 ﻿
 
-<div class="row">
+<div ng-if="question == undefined" class="row">
     <div class="col-md-8">
-        <h2>{{question.title}}</h2>
+        <div class="alert alert-info" role="alert">Loading...</div>
+    </div>
+</div>
+
+<div ng-if="question != undefined"  class="row">
+    <div class="col-md-8">
+        <h2>{{question.Title}}</h2>
         <div class="panel panel-default">
             <div class="panel-body">
-                <p ng-bind-html="question.detail"></p>
+                <p ng-bind-html="question.Detail"></p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row" id="answsersRow">
+<div ng-if="question != undefined" class="row" id="answsersRow">
     <div class="col-md-8">
-        <div ng-repeat="answer in answers">
+        <div ng-repeat="answer in question.Answers">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    {{answer.content}}
+                    {{answer.Content}}
                 </div>
             </div>
         </div>
@@ -24,7 +30,7 @@
 </div>
 
 
-<div class="row">
+<div ng-if="question != undefined" class="row">
     <div class="col-md-8">
         <form>
             <div class="form-group">
