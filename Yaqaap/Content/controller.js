@@ -95,7 +95,7 @@ function searchController($scope, $http) {
             //    $scope.questions = undefined;
             //});
         } else {
-            $scope.questions = undefined;
+            this.questions = undefined;
         }
 
     };
@@ -109,32 +109,32 @@ function askController($scope, $http) {
     $scope.markdownPreview = "";
 
     $scope.updateMarkdownPreview = function (data) {
-        $scope.markdownPreview = markdown.toHTML(data);
+        this.markdownPreview = markdown.toHTML(data);
     };
 
     $scope.ask = function () {
 
-        if (!$scope.questionTitle) {
-            $scope.askResult = "NeedTitle";
+        if (!this.questionTitle) {
+            this.askResult = "NeedTitle";
             return;
         }
 
-        if (!$scope.questionDetail) {
-            $scope.askResult = "NeedDetail";
+        if (!this.questionDetail) {
+            this.askResult = "NeedDetail";
             return;
         }
 
-        if (!$scope.questionTags) {
-            $scope.askResult = "NeedTags";
+        if (!this.questionTags) {
+            this.askResult = "NeedTags";
             return;
         }
 
-        if ($scope.questionTitle && $scope.questionDetail && $scope.questionTags) {
+        if (this.questionTitle && this.questionDetail && this.questionTags) {
 
             var askData = {
-                title: $scope.questionTitle,
-                detail: $scope.questionDetail,
-                tags: $scope.questionTags.split(",")
+                title: this.questionTitle,
+                detail: this.questionDetail,
+                tags: this.questionTags.split(",")
             };
 
             $http.post("/api/ask", askData)
@@ -176,96 +176,86 @@ function answersController($scope, $http, $route, $routeParams) {
     var vm = this;
 
 
-    //$scope.question = {
-    //    'Title': 'This is a question ' + $routeParams.questionId,
-    //    'Detail': markdown.toHTML('**This is the details !!!**'),
-    //};
+    $http.get("/api/answers/" + $routeParams.questionId)
+                  .success(function (data, status, headers, config) {
+                      // do what you do
+                      $scope.question = data;
+                      $scope.question.Detail = markdown.toHTML($scope.question.Detail);
+                  })
+                  .error(function (data, status, headers, config) {
 
-    //$scope.answers = [
-    //    { 'Content': 'This is an answer' },
-    //    { 'Content': 'This is another answer' },
-    //    { 'Content': 'This is yet another answer' },
-    //];
+                      $scope.question = undefined;
+                      //$scope.answers = undefined;
 
+                      if (status === 401) {
+                          // handle redirecting to the login page
+                      } else if (status === 500 || status === 503) {
+                          // retry the call and eventually handle too many failures
+                      } else if (data != undefined) {
+                          if (
+                              data.responseStatus != null &&
+                              data.responseStatus.errors != null &&
+                              data.responseStatus.errors.length > 0)
+                              // handle validation error
+                          {
+                              var errors = data.responseStatus.errors;
+                          } else {
+                              // handle non validation error
+                              var errorCode = data.responseStatus.errorCode;
+                              var message = data.responseStatus.message;
+                          }
+                      }
+                  });
 
 
     $scope.markdownPreview = "";
 
     $scope.updateMarkdownPreview = function (data) {
-        $scope.markdownPreview = markdown.toHTML(data);
+        this.markdownPreview = markdown.toHTML(data);
     };
-
-    $http.get("/api/answers/" + $routeParams.questionId)
-                   .success(function (data, status, headers, config) {
-                       // do what you do
-                       $scope.question = data;
-                       $scope.question.Detail = markdown.toHTML($scope.question.Detail);
-                   })
-                   .error(function (data, status, headers, config) {
-
-                       $scope.question = undefined;
-                       //$scope.answers = undefined;
-
-                       if (status === 401) {
-                           // handle redirecting to the login page
-                       } else if (status === 500 || status === 503) {
-                           // retry the call and eventually handle too many failures
-                       } else if (data != undefined) {
-                           if (
-                               data.responseStatus != null &&
-                               data.responseStatus.errors != null &&
-                               data.responseStatus.errors.length > 0)
-                               // handle validation error
-                           {
-                               var errors = data.responseStatus.errors;
-                           } else {
-                               // handle non validation error
-                               var errorCode = data.responseStatus.errorCode;
-                               var message = data.responseStatus.message;
-                           }
-                       }
-                   });
 
     $scope.answer = function () {
 
-        if (!$scope.answerContent) {
-            $scope.answerResult = "NeedContent";
+        if (!this.answerContent) {
+            this.answerResult = "NeedContent";
             return;
         }
 
 
-        var askData = {
-            content: $scope.answerContent
+        var answerData = {
+            questionId: $routeParams.questionId,
+            content: this.answerContent
         };
 
-        //$http.post("/api/ask", askData)
-        //    .success(function (data, status, headers, config) {
-        //        // do what you do
-        //        $scope.askResult = data.Result;
-        //    })
-        //    .error(function (data, status, headers, config) {
 
-        //        $scope.askResult = undefined;
+        $http.post("/api/answer", answerData)
+            .success(function (data, status, headers, config) {
+                // do what you do
+                $scope.answerResult = data.Result;
+            })
+            .error(function (data, status, headers, config) {
 
-        //        if (status === 401) {
-        //            // handle redirecting to the login page
-        //        } else if (status === 500 || status === 503) {
-        //            // retry the call and eventually handle too many failures
-        //        } else if (data != undefined) {
-        //            if (
-        //                data.responseStatus != null &&
-        //                    data.responseStatus.errors != null &&
-        //                    data.responseStatus.errors.length > 0)
-        //                // handle validation error
-        //            {
-        //                var errors = data.responseStatus.errors;
-        //            } else {
-        //                // handle non validation error
-        //                var errorCode = data.responseStatus.errorCode;
-        //                var message = data.responseStatus.message;
-        //            }
-        //        }
-        //    });
+                $scope.answerResult = undefined;
+
+                if (status === 401) {
+                    // handle redirecting to the login page
+                } else if (status === 500 || status === 503) {
+                    // retry the call and eventually handle too many failures
+                } else if (data != undefined) {
+                    if (
+                        data.responseStatus != null &&
+                            data.responseStatus.errors != null &&
+                            data.responseStatus.errors.length > 0)
+                        // handle validation error
+                    {
+                        var errors = data.responseStatus.errors;
+                    } else {
+                        // handle non validation error
+                        var errorCode = data.responseStatus.errorCode;
+                        var message = data.responseStatus.message;
+                    }
+                }
+            });
 
 
     };

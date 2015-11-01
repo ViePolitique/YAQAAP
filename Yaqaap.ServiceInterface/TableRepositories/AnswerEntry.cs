@@ -6,7 +6,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
     /// <summary>
     /// Only one answer by user,
     /// PartitionKey : questionId
-    /// RowKey : userId
+    /// RowKey : creatorId
     /// </summary>
     public class AnswerEntry : TableEntity
     {
@@ -14,10 +14,10 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         {
         }
 
-        public AnswerEntry(Guid questionId, Guid userId)
+        public AnswerEntry(Guid questionId, Guid creatorId)
         {
-            PartitionKey = userId.ToString();
-            RowKey = questionId.ToString();
+            PartitionKey = questionId.ToString();
+            RowKey = creatorId.ToString();
         }
 
         public Guid GetQuestionId()
@@ -25,7 +25,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
             return Guid.Parse(PartitionKey);
         }
 
-        public Guid GetUserId()
+        public Guid GetCreatorId()
         {
             return Guid.Parse(RowKey);
         }

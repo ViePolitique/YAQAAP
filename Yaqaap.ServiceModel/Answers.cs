@@ -9,7 +9,7 @@ namespace Yaqaap.ServiceModel
     {
         public string Id { get; set; }
     }
-    
+
     public class AnswersResponse
     {
         public UserCard Creator { get; set; }
@@ -22,10 +22,10 @@ namespace Yaqaap.ServiceModel
 
         public Guid SelectedAnswer { get; set; }
 
-        public Answer [] Answers { get; set; }
+        public AnswerResult[] Answers { get; set; }
     }
 
-    public class Answer
+    public class AnswerResult
     {
         public UserCard Creator { get; set; }
         public DateTime Creation { get; set; }

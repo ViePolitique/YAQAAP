@@ -17,7 +17,7 @@ namespace Yaqaap.ServiceInterface
             AskResponse response = new AskResponse();
             response.Result = ErrorCode.OK;
 
-            Guid creatorId = Guid.Empty;
+            Guid creatorId = GetUserId();
 
             QuestionEntry questionEntry = new QuestionEntry(creatorId, Guid.NewGuid())
             {
@@ -81,9 +81,9 @@ namespace Yaqaap.ServiceInterface
                 Title = questionEntry.Title,
                 Views = questionEntry.Views,
                 SelectedAnswer = questionEntry.SelectedAnswer,
-                Answers = answerEntries.Select(k => new Answer
+                Answers = answerEntries.Select(k => new AnswerResult
                 {
-                    Creator = CreateUserCard(k.GetUserId()),
+                    Creator = CreateUserCard(k.GetCreatorId()),
                     Creation = k.Creation,
                     Content = k.Content,
                     Votes = k.Votes
@@ -91,6 +91,32 @@ namespace Yaqaap.ServiceInterface
             };
 
             return answersResponse;
+        }
+
+
+        public object Any(Answer request)
+        {
+            Guid creatorId = GetUserId();
+
+            TableRepository tableRepository = new TableRepository();
+            AnswerEntry answerQuery = new AnswerEntry(request.QuestionId, creatorId)
+                                      {
+                                            Content = request.Content,
+                                            Creation = DateTime.UtcNow,
+                                            Votes = 0
+                                      };
+
+            tableRepository.InsertOrReplace(answerQuery, Tables.Answers);
+
+            AnswerResponse response  = new AnswerResponse();
+            response.Result = ErrorCode.OK;            
+
+            return response;
+        }
+
+        private Guid GetUserId()
+        {
+            return Guid.Empty; // todo
         }
 
         private UserCard CreateUserCard(Guid creatorId)
