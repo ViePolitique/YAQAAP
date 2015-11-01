@@ -44,6 +44,8 @@ namespace Yaqaap.ServiceInterface.Business
                                             term = TableEntityHelper.RemoveDiacritics(term);
                                             term = TableEntityHelper.ToAzureKeyString(term);
 
+                                            // todo : use a local cache to avoid multiple useless queries on term
+
                                             TableRepository tableRepository = new TableRepository();
                                             var query = tableRepository.GetTable(Tables.Indexes).CreateQuery<IndexEntry>();
 
@@ -71,7 +73,7 @@ namespace Yaqaap.ServiceInterface.Business
                 var query = tableRepository.GetTable(tableName).CreateQuery<T>();
 
                 var result = from k in query
-                             where k.PartitionKey == id
+                             where k.RowKey == id
                              select k;
 
                 foreach (var data in result)
