@@ -33,14 +33,29 @@ yaqaap.config([
     }
 ]);
 
+yaqaap.service("$authService", authService);
+
 
 yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
-yaqaap.controller("signInController", ["$scope", "$http", signInController]);
-yaqaap.controller("registerController", ["$scope", "$http", registerController]);
+yaqaap.controller("signInController", ["$scope", "$http", "$authService", "$location", signInController]);
+yaqaap.controller("registerController", ["$scope", "$http", "$authService", registerController]);
 yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
 yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", "$location", answersController]);
-yaqaap.controller("searchController", ["$scope", "$http", "$location", searchController]);
+yaqaap.controller("searchController", ["$scope", "$http", "$location", "$authService", searchController]);
 
+
+function authService() {
+
+    var userId;
+
+    this.getUserId = function () {
+        return this.userId;
+    };
+
+    this.setUserId = function (userId) {
+        this.userId = userId;
+    };
+};
 
 function yaqqapController($scope, $route, $routeParams, $location) {
 
@@ -52,22 +67,46 @@ function yaqqapController($scope, $route, $routeParams, $location) {
     vm.$routeParams = $routeParams;
 };
 
-function signInController($scope, $http) {
+function signInController($scope, $http, $authService, $location) {
+
+    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
+    var vm = this;
+
+    $scope.username = undefined;
+    $scope.password = undefined;
+
+    $scope.signin = function () {
+
+        if ($scope.username != undefined) {
+            $authService.setUserId($scope.username);
+
+            $location.path("/");
+        }
+    };
+
+};
+
+function registerController($scope, $http, $authService) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
 };
 
-function registerController($scope, $http) {
+function searchController($scope, $http, $location, $authService) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
-};
 
-function searchController($scope, $http, $location) {
+    $scope.ask = function () {
 
-    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
-    var vm = this;
+        if ($authService.getUserId() == undefined) {
+            $location.path("/SignIn");
+            return;
+        }
+
+        $location.path("/Ask");
+
+    };
 
     $scope.searchChange = function () {
 
