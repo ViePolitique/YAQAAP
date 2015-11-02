@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Web;
 using Yaqaap.ServiceInterface.TableRepositories;
 
-namespace Yaqaap.Framework
+namespace Yaqaap.ServiceInterface.ServiceStack
 {
     public class AzureAuthProvider : CredentialsAuthProvider
     {

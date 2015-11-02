@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.WindowsAzure.Storage.Table;
 using ServiceStack;
+using ServiceStack.Auth;
 using ServiceStack.Support.Markdown;
 using Yaqaap.ServiceInterface.Business;
 using Yaqaap.ServiceInterface.TableRepositories;
@@ -100,22 +101,27 @@ namespace Yaqaap.ServiceInterface
 
             TableRepository tableRepository = new TableRepository();
             AnswerEntry answerQuery = new AnswerEntry(request.QuestionId, creatorId)
-                                      {
-                                            Content = request.Content,
-                                            Creation = DateTime.UtcNow,
-                                            Votes = 0
-                                      };
+            {
+                Content = request.Content,
+                Creation = DateTime.UtcNow,
+                Votes = 0
+            };
 
             tableRepository.InsertOrReplace(answerQuery, Tables.Answers);
 
-            AnswerResponse response  = new AnswerResponse();
-            response.Result = ErrorCode.OK;            
+            AnswerResponse response = new AnswerResponse
+            {
+                Result = ErrorCode.OK
+            };
+
 
             return response;
         }
 
         private Guid GetUserId()
         {
+            //IAuthSession session = GetSession();
+            //return Guid.Parse(session.UserAuthId);
             return Guid.Empty; // todo
         }
 

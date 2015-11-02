@@ -11,6 +11,7 @@ using ServiceStack.Caching;
 using ServiceStack.Razor;
 using Yaqaap.Framework;
 using Yaqaap.ServiceInterface;
+using Yaqaap.ServiceInterface.ServiceStack;
 
 namespace Yaqaap
 {
@@ -39,7 +40,7 @@ namespace Yaqaap
 
             Plugins.Add(new AuthFeature(() => new AuthUserSession(),
                   new IAuthProvider[] {
-                    new BasicAuthProvider(), //Sign-in with HTTP Basic Auth
+                    //new BasicAuthProvider(), //Sign-in with HTTP Basic Auth
                     new AzureAuthProvider(), //HTML Form post of UserName/Password credentials
                   }));
 
@@ -51,10 +52,10 @@ namespace Yaqaap
 
             // demo account ////////////
             userRep.CreateUserAuth(new UserAuth()
-                                   {
-                                       Email = "demo@yaqaap.com",
-                                       UserName = "demo"
-                                   }, "0000");
+            {
+                Email = "demo@yaqaap.com",
+                UserName = "demo"
+            }, "0000");
             ////////////////////////////
 
             this.Plugins.Add(new RazorFormat());
