@@ -3,6 +3,7 @@ using ServiceStack;
 
 namespace Yaqaap.ServiceModel
 {
+    [Authenticate]
     [Route("/answer")]
     public class Answer : IReturn<AnswerResponse>
     {

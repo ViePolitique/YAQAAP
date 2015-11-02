@@ -6,6 +6,8 @@ using System.Net;
 using System.Web;
 using Funq;
 using ServiceStack;
+using ServiceStack.Auth;
+using ServiceStack.Caching;
 using ServiceStack.Razor;
 using Yaqaap.Framework;
 using Yaqaap.ServiceInterface;
@@ -34,6 +36,26 @@ namespace Yaqaap
             //Config examples
             //this.Plugins.Add(new PostmanFeature());
             //this.Plugins.Add(new CorsFeature());
+
+            Plugins.Add(new AuthFeature(() => new AuthUserSession(),
+                  new IAuthProvider[] {
+                    new BasicAuthProvider(), //Sign-in with HTTP Basic Auth
+                    new AzureAuthProvider(), //HTML Form post of UserName/Password credentials
+                  }));
+
+            Plugins.Add(new RegistrationFeature());
+
+            container.Register<ICacheClient>(new MemoryCacheClient());
+            var userRep = new InMemoryAuthRepository();
+            container.Register<IUserAuthRepository>(userRep);
+
+            // demo account ////////////
+            userRep.CreateUserAuth(new UserAuth()
+                                   {
+                                       Email = "demo@yaqaap.com",
+                                       UserName = "demo"
+                                   }, "0000");
+            ////////////////////////////
 
             this.Plugins.Add(new RazorFormat());
 

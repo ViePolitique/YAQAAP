@@ -144,7 +144,9 @@
     <Content Include="Content\yaqaap.css" />
     <Content Include="Content\_Answers.html" />
     <Content Include="Content\_Ask.html" />
+    <Content Include="Content\_Register.html" />
     <Content Include="Content\_Search.html" />
+    <Content Include="Content\_SignIn.html" />
     <Content Include="Global.asax" />
     <Content Include="Content\components\angular\angular.min.js.map" />
     <Content Include="Content\controller.js" />

@@ -16,6 +16,14 @@ yaqaap.config([
                 templateUrl: "/Content/_Answers.html",
                 controller: "answersController"
             })
+            .when("/SignIn", {
+                templateUrl: "/Content/_SignIn.html",
+                controller: "signInController"
+            })
+            .when("/Register", {
+                templateUrl: "/Content/_Register.html",
+                controller: "registerController"
+            })
             .when("/NotFound", {
                 templateUrl: "/Content/_NotFound.html"
             })
@@ -26,11 +34,12 @@ yaqaap.config([
 ]);
 
 
-
 yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
-yaqaap.controller("askController", ["$scope", "$http", askController]);
-yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", answersController]);
-yaqaap.controller("searchController", ["$scope", "$http", searchController]);
+yaqaap.controller("signInController", ["$scope", "$http", signInController]);
+yaqaap.controller("registerController", ["$scope", "$http", registerController]);
+yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
+yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", "$location", answersController]);
+yaqaap.controller("searchController", ["$scope", "$http", "$location", searchController]);
 
 
 function yaqqapController($scope, $route, $routeParams, $location) {
@@ -43,7 +52,19 @@ function yaqqapController($scope, $route, $routeParams, $location) {
     vm.$routeParams = $routeParams;
 };
 
-function searchController($scope, $http) {
+function signInController($scope, $http) {
+
+    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
+    var vm = this;
+};
+
+function registerController($scope, $http) {
+
+    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
+    var vm = this;
+};
+
+function searchController($scope, $http, $location) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
@@ -62,6 +83,7 @@ function searchController($scope, $http) {
 
                     if (status === 401) {
                         // handle redirecting to the login page
+                        $location.path("/SignIn");
                     } else if (status === 500 || status === 503) {
                         // retry the call and eventually handle too many failures
                     } else if (data != undefined) {
@@ -102,7 +124,7 @@ function searchController($scope, $http) {
 };
 
 
-function askController($scope, $http) {
+function askController($scope, $http, $location) {
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
 
@@ -148,6 +170,7 @@ function askController($scope, $http) {
 
                     if (status === 401) {
                         // handle redirecting to the login page
+                        $location.path("/SignIn");
                     } else if (status === 500 || status === 503) {
                         // retry the call and eventually handle too many failures
                     } else if (data != undefined) {
@@ -171,7 +194,7 @@ function askController($scope, $http) {
 };
 
 
-function answersController($scope, $http, $route, $routeParams) {
+function answersController($scope, $http, $route, $routeParams, $location) {
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
 
@@ -189,6 +212,7 @@ function answersController($scope, $http, $route, $routeParams) {
 
                       if (status === 401) {
                           // handle redirecting to the login page
+                          $location.path("/SignIn");
                       } else if (status === 500 || status === 503) {
                           // retry the call and eventually handle too many failures
                       } else if (data != undefined) {
@@ -239,6 +263,7 @@ function answersController($scope, $http, $route, $routeParams) {
 
                 if (status === 401) {
                     // handle redirecting to the login page
+                    $location.path("/SignIn");
                 } else if (status === 500 || status === 503) {
                     // retry the call and eventually handle too many failures
                 } else if (data != undefined) {

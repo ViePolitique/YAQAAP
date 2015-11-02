@@ -105,6 +105,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceStack\AzureAuthProvider.cs" />
     <Compile Include="Business\IndexHelper.cs" />
     <Compile Include="MyServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="TableRepositories\QuestionEntry.cs" />
     <Compile Include="TableRepositories\TableEntityHelper.cs" />
     <Compile Include="TableRepositories\TableRepository.cs" />
+    <Compile Include="TableRepositories\UserEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
