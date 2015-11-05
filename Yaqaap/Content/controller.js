@@ -1,4 +1,4 @@
-﻿var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate"]);
+var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate"]);
 
 yaqaap.config([
     "$routeProvider", "$locationProvider",
@@ -36,7 +36,7 @@ yaqaap.config([
 yaqaap.service("$authService", authService);
 
 
-yaqaap.controller("yaqqapController", ["$scope", "$route", "$routeParams", "$location", yaqqapController]);
+yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$location", yaqaapController]);
 yaqaap.controller("signInController", ["$scope", "$http", "$authService", "$location", signInController]);
 yaqaap.controller("registerController", ["$scope", "$http", "$authService", registerController]);
 yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
@@ -57,7 +57,7 @@ function authService() {
     };
 };
 
-function yaqqapController($scope, $route, $routeParams, $location) {
+function yaqaapController($scope, $route, $routeParams, $location) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
@@ -76,11 +76,55 @@ function signInController($scope, $http, $authService, $location) {
     $scope.password = undefined;
 
     $scope.signin = function () {
+        try {
+            $scope.signing = true;
 
-        if ($scope.username != undefined) {
-            $authService.setUserId($scope.username);
+            if ($authService.getUserId() != undefined) {
+                $location.path("/");
+                return;
+            }
 
-            $location.path("/");
+            if ($scope.username != undefined && $scope.username !== '') {
+
+                var authData = {
+                    username: $scope.username,
+                    password: $scope.password
+                };
+
+                $http.post("/auth", authData)
+                              .success(function (data, status, headers, config) {
+                                  // do what you do
+                                  // $scope.askResult = data.Result;
+                                  $authService.setUserId($scope.username);
+                                  $location.path("/");
+                              })
+                              .error(function (data, status, headers, config) {
+
+                                  //$scope.askResult = undefined;
+
+                                  if (status === 401) {
+                                      // handle redirecting to the login page
+                                      //$location.path("/SignIn");
+                                  } else if (status === 500 || status === 503) {
+                                      // retry the call and eventually handle too many failures
+                                  } else if (data != undefined) {
+                                      if (
+                                          data.responseStatus != null &&
+                                              data.responseStatus.errors != null &&
+                                              data.responseStatus.errors.length > 0)
+                                          // handle validation error
+                                      {
+                                          var errors = data.responseStatus.errors;
+                                      } else {
+                                          // handle non validation error
+                                          var errorCode = data.responseStatus.errorCode;
+                                          var message = data.responseStatus.message;
+                                      }
+                                  }
+                              });
+            }
+        } finally {
+            $scope.signing = false;
         }
     };
 
@@ -125,7 +169,7 @@ function registerController($scope, $http, $authService) {
                 email: $scope.email,
                 username: $scope.username,
                 password: $scope.password,
-        };
+            };
 
             $http.post("/api/register", registerData)
                           .success(function (data, status, headers, config) {
@@ -249,59 +293,66 @@ function askController($scope, $http, $location) {
 
     $scope.ask = function () {
 
-        if (!this.questionTitle) {
-            this.askResult = "NeedTitle";
-            return;
-        }
+        try {
+            $scope.asking = true;
 
-        if (!this.questionDetail) {
-            this.askResult = "NeedDetail";
-            return;
-        }
+            if (!this.questionTitle) {
+                this.askResult = "NeedTitle";
+                return;
+            }
 
-        if (!this.questionTags) {
-            this.askResult = "NeedTags";
-            return;
-        }
+            if (!this.questionDetail) {
+                this.askResult = "NeedDetail";
+                return;
+            }
 
-        if (this.questionTitle && this.questionDetail && this.questionTags) {
+            if (!this.questionTags) {
+                this.askResult = "NeedTags";
+                return;
+            }
 
-            var askData = {
-                title: this.questionTitle,
-                detail: this.questionDetail,
-                tags: this.questionTags.split(",")
-            };
+            if (this.questionTitle && this.questionDetail && this.questionTags) {
 
-            $http.post("/api/ask", askData)
-                .success(function (data, status, headers, config) {
-                    // do what you do
-                    $scope.askResult = data.Result;
-                })
-                .error(function (data, status, headers, config) {
+                var askData = {
+                    title: this.questionTitle,
+                    detail: this.questionDetail,
+                    tags: this.questionTags.split(",")
+                };
 
-                    $scope.askResult = undefined;
+                $http.post("/api/ask", askData)
+                    .success(function (data, status, headers, config) {
+                        // do what you do
+                        $scope.askResult = data.Result;
+                    })
+                    .error(function (data, status, headers, config) {
 
-                    if (status === 401) {
-                        // handle redirecting to the login page
-                        $location.path("/SignIn");
-                    } else if (status === 500 || status === 503) {
-                        // retry the call and eventually handle too many failures
-                    } else if (data != undefined) {
-                        if (
-                            data.responseStatus != null &&
-                                data.responseStatus.errors != null &&
-                                data.responseStatus.errors.length > 0)
-                            // handle validation error
-                        {
-                            var errors = data.responseStatus.errors;
-                        } else {
-                            // handle non validation error
-                            var errorCode = data.responseStatus.errorCode;
-                            var message = data.responseStatus.message;
+                        $scope.askResult = undefined;
+
+                        if (status === 401) {
+                            // handle redirecting to the login page
+                            $location.path("/SignIn");
+                        } else if (status === 500 || status === 503) {
+                            // retry the call and eventually handle too many failures
+                        } else if (data != undefined) {
+                            if (
+                                data.responseStatus != null &&
+                                    data.responseStatus.errors != null &&
+                                    data.responseStatus.errors.length > 0)
+                                // handle validation error
+                            {
+                                var errors = data.responseStatus.errors;
+                            } else {
+                                // handle non validation error
+                                var errorCode = data.responseStatus.errorCode;
+                                var message = data.responseStatus.message;
+                            }
                         }
-                    }
-                });
+                    });
+            }
+        } finally {
+            $scope.asking = false;
         }
+
 
     };
 };
@@ -353,48 +404,53 @@ function answersController($scope, $http, $route, $routeParams, $location) {
 
     $scope.answer = function () {
 
-        if (!this.answerContent) {
-            this.answerResult = "NeedContent";
-            return;
-        }
+        try {
+            $scope.anwsering = true;
+
+            if (!this.answerContent) {
+                this.answerResult = "NeedContent";
+                return;
+            }
 
 
-        var answerData = {
-            questionId: $routeParams.questionId,
-            content: this.answerContent
-        };
+            var answerData = {
+                questionId: $routeParams.questionId,
+                content: this.answerContent
+            };
 
 
-        $http.post("/api/answer", answerData)
-            .success(function (data, status, headers, config) {
-                // do what you do
-                $scope.answerResult = data.Result;
-            })
-            .error(function (data, status, headers, config) {
+            $http.post("/api/answer", answerData)
+                .success(function (data, status, headers, config) {
+                    // do what you do
+                    $scope.answerResult = data.Result;
+                })
+                .error(function (data, status, headers, config) {
 
-                $scope.answerResult = undefined;
+                    $scope.answerResult = undefined;
 
-                if (status === 401) {
-                    // handle redirecting to the login page
-                    $location.path("/SignIn");
-                } else if (status === 500 || status === 503) {
-                    // retry the call and eventually handle too many failures
-                } else if (data != undefined) {
-                    if (
-                        data.responseStatus != null &&
-                            data.responseStatus.errors != null &&
-                            data.responseStatus.errors.length > 0)
-                        // handle validation error
-                    {
-                        var errors = data.responseStatus.errors;
-                    } else {
-                        // handle non validation error
-                        var errorCode = data.responseStatus.errorCode;
-                        var message = data.responseStatus.message;
+                    if (status === 401) {
+                        // handle redirecting to the login page
+                        $location.path("/SignIn");
+                    } else if (status === 500 || status === 503) {
+                        // retry the call and eventually handle too many failures
+                    } else if (data != undefined) {
+                        if (
+                            data.responseStatus != null &&
+                                data.responseStatus.errors != null &&
+                                data.responseStatus.errors.length > 0)
+                            // handle validation error
+                        {
+                            var errors = data.responseStatus.errors;
+                        } else {
+                            // handle non validation error
+                            var errorCode = data.responseStatus.errorCode;
+                            var message = data.responseStatus.message;
+                        }
                     }
-                }
-            });
-
+                });
+        } finally {
+            $scope.anwsering = false;
+        }
 
     };
 };

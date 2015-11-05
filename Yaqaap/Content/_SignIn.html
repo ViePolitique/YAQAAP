@@ -15,7 +15,7 @@
                 <input class="form-control input-lg" ng-model="password" id="password" type="password" placeholder="password">
             </div>
             <div class="form-group">
-                <a class="btn btn-primary btn-lg" id="signIn" ng-click="signin()">Sign in</a>
+                <a class="btn btn-primary btn-lg" id="signIn" ng-click="signin()" ng-disable="!signing">Sign in</a>
             </div>
         </form>
     </div>

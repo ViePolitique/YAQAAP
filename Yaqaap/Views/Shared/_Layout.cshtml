@@ -24,7 +24,7 @@
     <base href="/">
 
 </head>
-<body>
+<body ng-controller="yaqaapController as vm">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="~/Content/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -52,7 +52,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">Home</a></li>
+                    <li ng-class="{active: vm.$location.path() === '/'}"><a href="/">Home</a></li>
+                    <li ng-class="{active: vm.$location.path() === '/SignIn'}"><a href="/SignIn">Sign in</a></li>
+                    <li ng-class="{active: vm.$location.path() === '/Register'}"><a href="/Register">Register</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
