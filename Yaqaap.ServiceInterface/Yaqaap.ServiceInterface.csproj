@@ -107,7 +107,7 @@
   <ItemGroup>
     <Compile Include="ServiceStack\AzureAuthProvider.cs" />
     <Compile Include="Business\IndexHelper.cs" />
-    <Compile Include="MyServices.cs" />
+    <Compile Include="YaqaapService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableRepositories\AnswerEntry.cs" />
     <Compile Include="TableRepositories\IndexEntry.cs" />

@@ -14,7 +14,7 @@ namespace Yaqaap.Tests
 
         public UnitTests()
         {
-            _appHost = new BasicAppHost(typeof(MyServices).Assembly)
+            _appHost = new BasicAppHost(typeof(YaqaapService).Assembly)
             {
                 ConfigureContainer = container =>
                 {
@@ -33,7 +33,7 @@ namespace Yaqaap.Tests
         [Test]
         public void TestMethod1()
         {
-            var service = _appHost.Container.Resolve<MyServices>();
+            var service = _appHost.Container.Resolve<YaqaapService>();
 
             //var response = (HelloResponse)service.Any(new Hello { Name = "World" });
 

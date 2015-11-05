@@ -90,6 +90,80 @@ function registerController($scope, $http, $authService) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
+
+    if ($authService.getUserId() != undefined) {
+        $location.path("/");
+        return;
+    }
+
+    $scope.register = function () {
+
+        $scope.registering = true;
+        try {
+
+            if ($scope.email == undefined || $scope.email === '') {
+                $scope.registerResult = 'NeedEmail';
+                return;
+            }
+
+            if ($scope.username == undefined || $scope.username === '') {
+                $scope.registerResult = 'NeedUsername';
+                return;
+            }
+
+            if ($scope.password == undefined || $scope.password === '') {
+                $scope.registerResult = 'NeedPassword';
+                return;
+            }
+
+            if ($scope.password !== $scope.confirmPassword) {
+                $scope.registerResult = 'DifferentPassword';
+                return;
+            }
+
+            var registerData = {
+                email: $scope.email,
+                username: $scope.username,
+                password: $scope.password,
+        };
+
+            $http.post("/api/register", registerData)
+                          .success(function (data, status, headers, config) {
+                              // do what you do
+                              $scope.askResult = data.Result;
+                          })
+                          .error(function (data, status, headers, config) {
+
+                              $scope.askResult = undefined;
+
+                              if (status === 401) {
+                                  // handle redirecting to the login page
+                                  $location.path("/SignIn");
+                              } else if (status === 500 || status === 503) {
+                                  // retry the call and eventually handle too many failures
+                              } else if (data != undefined) {
+                                  if (
+                                      data.responseStatus != null &&
+                                          data.responseStatus.errors != null &&
+                                          data.responseStatus.errors.length > 0)
+                                      // handle validation error
+                                  {
+                                      var errors = data.responseStatus.errors;
+                                  } else {
+                                      // handle non validation error
+                                      var errorCode = data.responseStatus.errorCode;
+                                      var message = data.responseStatus.message;
+                                  }
+                              }
+                          });
+
+
+            $scope.registerResult = 'OK';
+        } finally {
+            $scope.registering = false;
+        }
+    };
+
 };
 
 function searchController($scope, $http, $location, $authService) {

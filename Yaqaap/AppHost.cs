@@ -22,7 +22,7 @@ namespace Yaqaap
         /// Base constructor requires a name and assembly to locate web service classes. 
         /// </summary>
         public AppHost()
-            : base("Yaqaap", typeof(MyServices).Assembly)
+            : base("Yaqaap", typeof(YaqaapService).Assembly)
         {
 
         }
@@ -44,19 +44,11 @@ namespace Yaqaap
                     new AzureAuthProvider(), //HTML Form post of UserName/Password credentials
                   }));
 
-            Plugins.Add(new RegistrationFeature());
+            Plugins.Add(new RegistrationFeature() { AtRestPath = "/api/register" });
 
             container.Register<ICacheClient>(new MemoryCacheClient());
             var userRep = new InMemoryAuthRepository();
             container.Register<IUserAuthRepository>(userRep);
-
-            // demo account ////////////
-            userRep.CreateUserAuth(new UserAuth()
-            {
-                Email = "demo@yaqaap.com",
-                UserName = "demo"
-            }, "0000");
-            ////////////////////////////
 
             this.Plugins.Add(new RazorFormat());
 
@@ -75,7 +67,11 @@ namespace Yaqaap
         public override RouteAttribute[] GetRouteAttributes(Type requestType)
         {
             var routes = base.GetRouteAttributes(requestType);
-            routes.Each(x => x.Path = "/api" + x.Path);
+            routes.Each(x =>
+                        {
+                            if (!x.Path.StartsWith("/api/"))
+                                x.Path = "/api" + x.Path;
+                        });
             return routes;
         }
 

@@ -11,7 +11,7 @@ using Yaqaap.ServiceModel;
 
 namespace Yaqaap.ServiceInterface
 {
-    public class MyServices : Service
+    public class YaqaapService : Service
     {
         public object Any(Ask request)
         {
