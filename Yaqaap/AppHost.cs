@@ -41,14 +41,13 @@ namespace Yaqaap
             Plugins.Add(new AuthFeature(() => new AuthUserSession(),
                   new IAuthProvider[] {
                     //new BasicAuthProvider(), //Sign-in with HTTP Basic Auth
-                    new AzureAuthProvider(), //HTML Form post of UserName/Password credentials
+                    new CredentialsAuthProvider(), //HTML Form post of UserName/Password credentials
                   }));
 
-            Plugins.Add(new RegistrationFeature() { AtRestPath = "/api/register" });
+            Plugins.Add(new AzureRegistrationFeature() { AtRestPath = "/api/register" });
 
             container.Register<ICacheClient>(new MemoryCacheClient());
-            var userRep = new InMemoryAuthRepository();
-            container.Register<IUserAuthRepository>(userRep);
+            container.Register<IUserAuthRepository>(new AzureAuthProvider());
 
             this.Plugins.Add(new RazorFormat());
 

@@ -38,7 +38,7 @@ yaqaap.service("$authService", authService);
 
 yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$location", yaqaapController]);
 yaqaap.controller("signInController", ["$scope", "$http", "$authService", "$location", signInController]);
-yaqaap.controller("registerController", ["$scope", "$http", "$authService", registerController]);
+yaqaap.controller("registerController", ["$scope", "$http", "$authService", "$location", registerController]);
 yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
 yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", "$location", answersController]);
 yaqaap.controller("searchController", ["$scope", "$http", "$location", "$authService", searchController]);
@@ -74,6 +74,11 @@ function signInController($scope, $http, $authService, $location) {
 
     $scope.username = undefined;
     $scope.password = undefined;
+
+    if ($authService.getUserId() != undefined) {
+        $location.path("/");
+        return;
+    }
 
     $scope.signin = function () {
         try {
@@ -130,7 +135,7 @@ function signInController($scope, $http, $authService, $location) {
 
 };
 
-function registerController($scope, $http, $authService) {
+function registerController($scope, $http, $authService, $location) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
@@ -142,8 +147,16 @@ function registerController($scope, $http, $authService) {
 
     $scope.register = function () {
 
-        $scope.registering = true;
+
         try {
+
+            $scope.registering = true;
+
+            if ($authService.getUserId() != undefined) {
+                $location.path("/");
+                return;
+            }
+
 
             if ($scope.email == undefined || $scope.email === '') {
                 $scope.registerResult = 'NeedEmail';
