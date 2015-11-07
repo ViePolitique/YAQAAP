@@ -34,6 +34,8 @@ namespace Yaqaap
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
+            StorageConfig.StorageConnexionString = ConfigurationManager.AppSettings["storage"];
+
             //Config examples
             //this.Plugins.Add(new PostmanFeature());
             //this.Plugins.Add(new CorsFeature());
@@ -54,13 +56,6 @@ namespace Yaqaap
             // Hack pour que le F5 fonctionne avec angular-route
             this.CustomErrorHttpHandlers[HttpStatusCode.NotFound] = new RazorHandler("/");
             //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
-
-#if DEBUG
-            StorageConfig.StorageConnexionString = null;
-#else
-            StorageConfig.StorageConnexionString = ConfigurationManager.AppSettings["storage"];
-#endif
-
         }
 
         public override RouteAttribute[] GetRouteAttributes(Type requestType)
