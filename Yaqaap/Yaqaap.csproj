@@ -173,6 +173,7 @@
     <Content Include="Content\bower_components\angular-animate\angular-animate.min.js.map" />
     <Content Include="Content\bower_components\angular-route\angular-route.min.js.map" />
     <Content Include="Content\_NotFound.html" />
+    <None Include="Properties\PublishProfiles\Yaqaap.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
