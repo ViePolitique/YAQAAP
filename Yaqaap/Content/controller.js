@@ -234,14 +234,44 @@ function searchController($scope, $http, $location, $authService) {
     var vm = this;
 
     $scope.ask = function () {
-
         if ($authService.getUserId() == undefined) {
             $location.path("/SignIn");
             return;
         }
 
         $location.path("/Ask");
+    };
 
+    $scope.top = function () {
+        $http.get("/api/top")
+                  .success(function (data, status, headers, config) {
+                      // do what you do
+                      $scope.topQuestions = data.Questions;
+                  })
+                  .error(function (data, status, headers, config) {
+
+                      $scope.topQuestions = undefined;
+
+                      if (status === 401) {
+                          // handle redirecting to the login page
+                          $location.path("/SignIn");
+                      } else if (status === 500 || status === 503) {
+                          // retry the call and eventually handle too many failures
+                      } else if (data != undefined) {
+                          if (
+                              data.responseStatus != null &&
+                              data.responseStatus.errors != null &&
+                              data.responseStatus.errors.length > 0)
+                              // handle validation error
+                          {
+                              var errors = data.responseStatus.errors;
+                          } else {
+                              // handle non validation error
+                              var errorCode = data.responseStatus.errorCode;
+                              var message = data.responseStatus.message;
+                          }
+                      }
+                  });
     };
 
     $scope.searchChange = function () {
@@ -276,26 +306,13 @@ function searchController($scope, $http, $location, $authService) {
                         }
                     }
                 });
-
-
-
-
-            //.error(function (response, headers, config) {
-            //    // handle non validation error
-            //    //errorCode = response.error.errorCode;
-            //    //message = response.error.message;
-            //    $scope.questions = undefined;
-            //})
-            //.validation(function (response, headers, config) {
-            //    // handle validation error
-            //    //errors = response.validationErrors;
-            //    $scope.questions = undefined;
-            //});
         } else {
             this.questions = undefined;
         }
 
     };
+
+    $scope.top();
 };
 
 

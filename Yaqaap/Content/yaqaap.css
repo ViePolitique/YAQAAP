@@ -168,3 +168,6 @@ to {background-position: 500px -500px;}
 .btn-default {
     background: transparent;
 }
+
+
+.top-buffer { margin-top:50px; }

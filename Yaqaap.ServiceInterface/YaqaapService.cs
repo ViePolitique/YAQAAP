@@ -36,6 +36,25 @@ namespace Yaqaap.ServiceInterface
             return response;
         }
 
+        public object Any(Top request)
+        {
+            TableRepository tableRepository = new TableRepository();
+            var questions = tableRepository.GetTable(Tables.Questions).CreateQuery<QuestionEntry>().ToArray().Take(10);
+
+            // "No similar question found... yet !"
+            return new TopResponse
+            {
+                Questions = questions.Select(k => new TopQuestionResponse
+                {
+                    Id = k.GetId(),
+                    Title = k.Title,
+                    Votes = k.Votes,
+                    Answers = k.Answers,
+                    Views = k.Views
+                }).ToArray()
+            };
+        }
+
         public object Any(Search request)
         {
             QuestionEntry[] questions = IndexHelper.Search<QuestionEntry>(request.Question, Tables.Questions);
@@ -76,7 +95,7 @@ namespace Yaqaap.ServiceInterface
             AnswersResponse answersResponse = new AnswersResponse
             {
                 Creation = questionEntry.Creation,
-                Creator = CreateUserCard(questionEntry.GetUserId()),
+                Owner = CreateUserCard(questionEntry.GetUserId()),
                 Detail = questionEntry.Detail,
                 Tags = questionEntry.Tags.SplitAndTrimOn(new char[] { ',' }),
                 Title = questionEntry.Title,
@@ -84,7 +103,7 @@ namespace Yaqaap.ServiceInterface
                 SelectedAnswer = questionEntry.SelectedAnswer,
                 Answers = answerEntries.Select(k => new AnswerResult
                 {
-                    Creator = CreateUserCard(k.GetCreatorId()),
+                    Owner = CreateUserCard(k.GetOwnerId()),
                     Creation = k.Creation,
                     Content = k.Content,
                     Votes = k.Votes
@@ -100,14 +119,28 @@ namespace Yaqaap.ServiceInterface
             Guid creatorId = GetUserId();
 
             TableRepository tableRepository = new TableRepository();
-            AnswerEntry answerQuery = new AnswerEntry(request.QuestionId, creatorId)
-            {
-                Content = request.Content,
-                Creation = DateTime.UtcNow,
-                Votes = 0
-            };
 
-            tableRepository.InsertOrReplace(answerQuery, Tables.Answers);
+            // create answers
+            AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, creatorId);
+            if (answerEntry == null)
+            {
+                answerEntry = new AnswerEntry(request.QuestionId, creatorId)
+                              {
+                                  Content = request.Content,
+                                  Creation = DateTime.UtcNow,
+                                  Votes = 0
+                              };
+
+                // update the answers count
+                QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.QuestionOwnerId, request.QuestionId);
+                if (questionEntry != null)
+                {
+                    questionEntry.Answers++;
+                    tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
+                }
+            }
+
+            tableRepository.InsertOrReplace(answerEntry, Tables.Answers);
 
             AnswerResponse response = new AnswerResponse
             {

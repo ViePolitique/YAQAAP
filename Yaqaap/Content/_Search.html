@@ -3,19 +3,29 @@
         <input class="form-control input-lg" ng-model="search" id="search" ng-change="searchChange()" type="text" placeholder="search">
     </div>
     <div class="col-md-4">
-        <a class="btn btn-primary btn-lg" id="askButton" ng-click="ask()" >Ask a new question</a>
+        <a class="btn btn-primary btn-lg" id="askButton" ng-click="ask()">Ask a new question</a>
     </div>
 </div>
 
 <div class="row yaqaap-fade" id="searchResultRow" ng-if="questions!=undefined">
-
     <hr />
-
     <div class="col-md-12">
         <div ng-repeat="question in questions">
-            <div><a href="/Answers/{{question.Id}}">{{question.Title}}</a></div>
+            <div><a href="/Answers/{{question.Id}}">{{question.Title}}</a>
+            </div>
         </div>
     </div>
 </div>
 
-<hr />
+<div class="row top-buffer" id="top">
+    <div class="col-md-8">
+        <table class="table">
+            <tr ng-repeat="question in topQuestions">
+                <td>{{question.Votes}} vote</td>
+                <td>{{question.Answers}} answers</td>
+                <td>{{question.Views}} views</td>
+                <td><a href="/Answers/{{question.Id}}">{{question.Title}}</a></td>
+            </tr>
+        </table>
+    </div>
+</div>

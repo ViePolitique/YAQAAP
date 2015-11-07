@@ -12,7 +12,7 @@ namespace Yaqaap.ServiceModel
 
     public class AnswersResponse
     {
-        public UserCard Creator { get; set; }
+        public UserCard Owner { get; set; }
         public DateTime Creation { get; set; }
         public long Views { get; set; }
 
@@ -27,7 +27,7 @@ namespace Yaqaap.ServiceModel
 
     public class AnswerResult
     {
-        public UserCard Creator { get; set; }
+        public UserCard Owner { get; set; }
         public DateTime Creation { get; set; }
         public int Votes { get; set; }
 

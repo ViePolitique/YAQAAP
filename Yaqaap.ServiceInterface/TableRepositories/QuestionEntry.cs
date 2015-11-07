@@ -38,7 +38,20 @@ namespace Yaqaap.ServiceInterface.TableRepositories
 
         public string Tags { get; set; }
 
+        /// <summary>
+        /// Number of views
+        /// </summary>
         public long Views { get; set; }
+
+        /// <summary>
+        /// Numbers of votes
+        /// </summary>
+        public int Votes { get; set; }  
+        
+        /// <summary>
+        /// Numbers of answers
+        /// </summary>
+        public int Answers { get; set; }
 
         /// <summary>
         /// UserId that posted the answer

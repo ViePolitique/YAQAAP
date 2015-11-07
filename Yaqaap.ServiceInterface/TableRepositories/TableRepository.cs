@@ -362,5 +362,12 @@ namespace Yaqaap.ServiceInterface.TableRepositories
             }
         }
 
+        public T Get<T>(string tableName, object partitionKey, object rowKey) where T : class, ITableEntity
+        {
+            TableOperation operation = TableOperation.Retrieve<T>(partitionKey.ToString(), rowKey.ToString());
+            CloudTable table = GetTable(tableName);
+            TableResult tableResult = table.Execute(operation);
+            return tableResult.Result as T;
+        }
     }
 }
