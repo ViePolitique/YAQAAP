@@ -51,10 +51,22 @@
                 <a class="navbar-brand" href="/">Yaqaap</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav ">
                     <li ng-class="{active: vm.$location.path() === '/'}"><a href="/">Home</a></li>
+                </ul>
+                <ul ng-if="!vm.$authService.isAuth()" class="nav navbar-nav navbar-right">
                     <li ng-class="{active: vm.$location.path() === '/SignIn'}"><a href="/SignIn">Sign in</a></li>
                     <li ng-class="{active: vm.$location.path() === '/Register'}"><a href="/Register">Register</a></li>
+                </ul>
+                <ul ng-if="vm.$authService.isAuth()" class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome {{vm.$authService.getUserId()}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Account</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Disconnect</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

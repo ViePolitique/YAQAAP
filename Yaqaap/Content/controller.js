@@ -36,7 +36,7 @@ yaqaap.config([
 yaqaap.service("$authService", authService);
 
 
-yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$location", yaqaapController]);
+yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$authService", "$location", yaqaapController]);
 yaqaap.controller("signInController", ["$scope", "$http", "$authService", "$location", signInController]);
 yaqaap.controller("registerController", ["$scope", "$http", "$authService", "$location", registerController]);
 yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
@@ -48,6 +48,10 @@ function authService() {
 
     var userId;
 
+    this.isAuth = function () {
+        return this.userId != undefined;
+    }
+
     this.getUserId = function () {
         return this.userId;
     };
@@ -57,7 +61,7 @@ function authService() {
     };
 };
 
-function yaqaapController($scope, $route, $routeParams, $location) {
+function yaqaapController($scope, $route, $routeParams, $authService, $location) {
 
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
     var vm = this;
@@ -65,6 +69,7 @@ function yaqaapController($scope, $route, $routeParams, $location) {
     vm.$route = $route;
     vm.$location = $location;
     vm.$routeParams = $routeParams;
+    vm.$authService = $authService;
 };
 
 function signInController($scope, $http, $authService, $location) {

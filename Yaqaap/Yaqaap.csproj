@@ -141,6 +141,7 @@
     <Content Include="Content\bower_components\markdown-js\dist\markdown.js" />
     <Content Include="Content\bower_components\markdown-js\dist\markdown.min.js" />
     <Content Include="Content\bower_components\to-markdown\dist\to-markdown.js" />
+    <Content Include="Content\Pictures\bg-insider-banner.gif" />
     <Content Include="Content\yaqaap.css" />
     <Content Include="Content\_Answers.html" />
     <Content Include="Content\_Ask.html" />
