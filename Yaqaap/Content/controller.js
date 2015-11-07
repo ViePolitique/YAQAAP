@@ -461,7 +461,9 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                                $scope.question.Votes = data.VoteValue;
                            }
                            else if (data.Result === 'OK' && target === 'answer') {
-                               //$scope.question.Votes = data.VoteValue;
+                               $scope.question.Answers.filter(function(obj) {
+                                   return obj.Owner.Id === ownerId;
+                               })[0].Votes = data.VoteValue;
                            }
                        })
                        .error(function (data, status, headers, config) {
