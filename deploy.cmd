@@ -68,8 +68,7 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Handling .NET Web Application deployment.
 
 :: 0 install bower
-npm install -g bower
-%DEPLOYMENT_SOURCE%\Yaqaap\bower install
+call :ExecuteCmd "%DEPLOYMENT_SOURCE%\Yaqaap\bower install"
 
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
