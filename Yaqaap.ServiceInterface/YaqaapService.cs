@@ -116,20 +116,20 @@ namespace Yaqaap.ServiceInterface
 
         public object Any(Answer request)
         {
-            Guid creatorId = GetUserId();
+            Guid userId = GetUserId();
 
             TableRepository tableRepository = new TableRepository();
 
             // create answers
-            AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, creatorId);
+            AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, userId);
             if (answerEntry == null)
             {
-                answerEntry = new AnswerEntry(request.QuestionId, creatorId)
-                              {
-                                  Content = request.Content,
-                                  Creation = DateTime.UtcNow,
-                                  Votes = 0
-                              };
+                answerEntry = new AnswerEntry(request.QuestionId, userId)
+                {
+                    Content = request.Content,
+                    Creation = DateTime.UtcNow,
+                    Votes = 0
+                };
 
                 // update the answers count
                 QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.QuestionOwnerId, request.QuestionId);
@@ -143,6 +143,74 @@ namespace Yaqaap.ServiceInterface
             tableRepository.InsertOrReplace(answerEntry, Tables.Answers);
 
             AnswerResponse response = new AnswerResponse
+            {
+                Result = ErrorCode.OK
+            };
+
+
+            return response;
+        }
+
+        public object Any(Vote request)
+        {
+            Guid userId = GetUserId();
+
+            TableRepository tableRepository = new TableRepository();
+
+            bool updateTarget = true;
+            VoteEntry voteEntry;
+            string votePartitionKey;
+
+            // create answers
+            if (request.VoteTarget == VoteTarget.Answer)
+            {
+                votePartitionKey = request.VoteTarget + "|" + request.QuestionId + "|" + request.AnswerOwnerId;
+                voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
+            }
+            else
+            {
+                votePartitionKey = request.VoteTarget + "|" + request.QuestionId;
+                voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
+            }
+
+
+            // Création d'un nouveau vote
+            if (voteEntry == null)
+            {
+                voteEntry = new VoteEntry(votePartitionKey, userId)
+                {
+                    Creation = DateTime.UtcNow,
+                    Modification = DateTime.UtcNow,
+                    Value = request.VoteKind == VoteKind.Up ? 1 : -1
+                };
+            }
+            else
+            {
+                // s'il existe un vote existant et que sa valeur n'as pas changé
+                if (voteEntry.Value == (request.VoteKind == VoteKind.Up ? 1 : -1))
+                    updateTarget = false;
+            }
+
+            if (updateTarget)
+            {
+                // insert le vote
+                tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
+
+                if (request.VoteTarget == VoteTarget.Answer)
+                {
+                    AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.AnswerOwnerId);
+                    answerEntry.Votes += voteEntry.Value;
+                    tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
+                }
+                else
+                {
+                    QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.QuestionOwnerId, request.QuestionId);
+                    questionEntry.Votes += voteEntry.Value;
+                    tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
+                }
+            }
+
+            VoteResponse response = new VoteResponse
             {
                 Result = ErrorCode.OK
             };

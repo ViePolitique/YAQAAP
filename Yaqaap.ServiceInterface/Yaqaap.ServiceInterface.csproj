@@ -109,6 +109,7 @@
     <Compile Include="Business\IndexHelper.cs" />
     <Compile Include="ServiceStack\AzureRegisterService.cs" />
     <Compile Include="ServiceStack\AzureRegistrationFeature.cs" />
+    <Compile Include="TableRepositories\VoteEntry.cs" />
     <Compile Include="YaqaapService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableRepositories\AnswerEntry.cs" />

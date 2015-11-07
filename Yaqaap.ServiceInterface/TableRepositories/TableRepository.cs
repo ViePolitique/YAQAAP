@@ -12,6 +12,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public const string Indexes = "indexes";
         public const string Answers = "answers";
         public const string Users = "users";
+        public const string Votes = "votes";
     }
 
     class TableRepository
