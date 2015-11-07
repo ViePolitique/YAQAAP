@@ -381,39 +381,41 @@ function answersController($scope, $http, $route, $routeParams, $location) {
     var vm = this;
 
 
-    $http.get("/api/answers/" + $routeParams.questionId)
-                  .success(function (data, status, headers, config) {
-                      // do what you do
-                      $scope.question = data;
-                      $scope.question.Detail = markdown.toHTML($scope.question.Detail);
-                  })
-                  .error(function (data, status, headers, config) {
+    $scope.reload = function() {
+        $http.get("/api/answers/" + $routeParams.questionId)
+                          .success(function (data, status, headers, config) {
+                              // do what you do
+                              $scope.question = data;
+                              $scope.question.Detail = markdown.toHTML($scope.question.Detail);
+                          })
+                          .error(function (data, status, headers, config) {
 
-                      $scope.question = undefined;
-                      //$scope.answers = undefined;
+                              $scope.question = undefined;
+                              //$scope.answers = undefined;
 
-                      if (status === 401) {
-                          // handle redirecting to the login page
-                          $location.path("/SignIn");
-                      } else if (status === 500 || status === 503) {
-                          // retry the call and eventually handle too many failures
-                      } else if (data != undefined) {
-                          if (
-                              data.responseStatus != null &&
-                              data.responseStatus.errors != null &&
-                              data.responseStatus.errors.length > 0)
-                              // handle validation error
-                          {
-                              var errors = data.responseStatus.errors;
-                          } else {
-                              // handle non validation error
-                              var errorCode = data.responseStatus.errorCode;
-                              var message = data.responseStatus.message;
-                          }
-                      }
-                  });
+                              if (status === 401) {
+                                  // handle redirecting to the login page
+                                  $location.path("/SignIn");
+                              } else if (status === 500 || status === 503) {
+                                  // retry the call and eventually handle too many failures
+                              } else if (data != undefined) {
+                                  if (
+                                      data.responseStatus != null &&
+                                      data.responseStatus.errors != null &&
+                                      data.responseStatus.errors.length > 0)
+                                      // handle validation error
+                                  {
+                                      var errors = data.responseStatus.errors;
+                                  } else {
+                                      // handle non validation error
+                                      var errorCode = data.responseStatus.errorCode;
+                                      var message = data.responseStatus.message;
+                                  }
+                              }
+                          });
+    };
 
-
+    $scope.reload();
     $scope.markdownPreview = "";
 
     $scope.updateMarkdownPreview = function (data) {
@@ -436,11 +438,15 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                 content: this.answerContent
             };
 
+            var me = this;
 
             $http.post("/api/answer", answerData)
                 .success(function (data, status, headers, config) {
                     // do what you do
                     $scope.answerResult = data.Result;
+                    me.answerContent = '';
+                    me.updateMarkdownPreview('');
+                    $scope.reload();
                 })
                 .error(function (data, status, headers, config) {
 

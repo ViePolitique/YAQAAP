@@ -60,6 +60,14 @@ from {background-position: 0 0;}
 to {background-position: 500px -500px;}
 }
 
+/* Buttons */
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
 /*callouts*/
 
 .bs-callout {
@@ -154,3 +162,9 @@ to {background-position: 500px -500px;}
     .yaqaap-fade.ng-enter.ng-enter-active {
         opacity: 1;
     }
+
+
+    
+.btn-default {
+    background: transparent;
+}

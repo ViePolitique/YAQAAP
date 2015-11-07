@@ -6,33 +6,67 @@
     </div>
 </div>
 
-<div ng-if="question != undefined"  class="row">
-    <div class="col-md-8">
+<div ng-if="question != undefined" class="row">
+    <div class="col-md-12">
         <h2>{{question.Title}}</h2>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <p ng-bind-html="question.Detail"></p>
-            </div>
-        </div>
+        <hr />
     </div>
 </div>
-
-<div ng-if="question != undefined" class="row" id="answsersRow">
-    <div class="col-md-8">
-        <div ng-repeat="answer in question.Answers">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    {{answer.Content}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div ng-if="question != undefined" class="row">
-    <div class="col-md-8">
+    <div class="col-md-1">
+        <div class="btn-group-vertical" role="group">
+            <button type="button" class="btn btn-default btn-lg" style="border: none">
+                <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default btn-lg" style="border: none">
+                <span>0</span>
+            </button>
+            <button type="button" class="btn btn-default btn-lg" style="border: none">
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-default btn-lg" style="border: none">
+                <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div ng-bind-html="question.Detail">
+        </div>
+    </div>
+</div>
+
+<div ng-if="question != undefined" id="answsersRow" ng-repeat="answer in question.Answers">
+    <div ng-if="question != undefined" class="row">
+        <div class="col-sm-8">
+            <hr />
+        </div>
+    </div>
+    <div ng-if="question != undefined" class="row">
+        <div class="col-md-1">
+            <div class="btn-group-vertical" role="group">
+                <button type="button" class="btn btn-default btn-lg" style="border: none">
+                    <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default  btn-lg" style="border: none">
+                    <span>0</span>
+                </button>
+                <button type="button" class="btn btn-default btn-lg" style="border: none">
+                    <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-7">
+            {{answer.Content}}
+        </div>
+    </div>
+</div>
+
+<div ng-if="question != undefined" class="row">
+    <div class="col-sm-8">
+        <hr />
         <form>
+            <h3><span class="glyphicon glyphicon glyphicon-console" aria-hidden="true"></span> Your Answer</h3>
             <div class="form-group">
                 <textarea class="form-control" id="answer-content" ng-model="answerContent" rows="5" placeholder="enter your own answser here" ng-change="updateMarkdownPreview(answerContent)"></textarea>
                 <div class="bs-callout bs-callout-info" ng-show="markdownPreview != ''">
