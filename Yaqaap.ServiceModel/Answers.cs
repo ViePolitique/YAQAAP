@@ -12,9 +12,12 @@ namespace Yaqaap.ServiceModel
 
     public class AnswersResponse
     {
+        public Guid Id { get; set; }
+
         public UserCard Owner { get; set; }
         public DateTime Creation { get; set; }
         public long Views { get; set; }
+        public int Votes { get; set; }
 
         public string Title { get; set; }
         public string Detail { get; set; }

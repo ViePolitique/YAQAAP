@@ -398,7 +398,7 @@ function answersController($scope, $http, $route, $routeParams, $location) {
     var vm = this;
 
 
-    $scope.reload = function() {
+    $scope.reload = function () {
         $http.get("/api/answers/" + $routeParams.questionId)
                           .success(function (data, status, headers, config) {
                               // do what you do
@@ -437,6 +437,57 @@ function answersController($scope, $http, $route, $routeParams, $location) {
 
     $scope.updateMarkdownPreview = function (data) {
         this.markdownPreview = markdown.toHTML(data);
+    };
+
+    $scope.questionVotes = function() {
+        return $scope.question.Votes;
+    };
+
+    $scope.vote = function (questionId, ownerId, target, kind) {
+
+        var voteData = {
+            questionId: questionId,
+            ownerId: ownerId,
+            voteTarget: target,
+            voteKind: kind
+        };
+
+        $http.post("/api/vote", voteData)
+                       .success(function (data, status, headers, config) {
+                           // do what you do
+                           //$scope.voteResult = data.Result;
+
+                           if (data.Result === 'OK' && target ==='question') {
+                               $scope.question.Votes = data.VoteValue;
+                           }
+                           else if (data.Result === 'OK' && target === 'answer') {
+                               //$scope.question.Votes = data.VoteValue;
+                           }
+                       })
+                       .error(function (data, status, headers, config) {
+
+                           //$scope.voteResult = undefined;
+
+                           if (status === 401) {
+                               // handle redirecting to the login page
+                               $location.path("/SignIn");
+                           } else if (status === 500 || status === 503) {
+                               // retry the call and eventually handle too many failures
+                           } else if (data != undefined) {
+                               if (
+                                   data.responseStatus != null &&
+                                       data.responseStatus.errors != null &&
+                                       data.responseStatus.errors.length > 0)
+                                   // handle validation error
+                               {
+                                   var errors = data.responseStatus.errors;
+                               } else {
+                                   // handle non validation error
+                                   var errorCode = data.responseStatus.errorCode;
+                                   var message = data.responseStatus.message;
+                               }
+                           }
+                       });
     };
 
     $scope.answer = function () {

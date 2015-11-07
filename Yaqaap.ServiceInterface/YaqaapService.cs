@@ -94,12 +94,14 @@ namespace Yaqaap.ServiceInterface
 
             AnswersResponse answersResponse = new AnswersResponse
             {
+                Id = questionEntry.GetId(),
                 Creation = questionEntry.Creation,
                 Owner = CreateUserCard(questionEntry.GetUserId()),
                 Detail = questionEntry.Detail,
                 Tags = questionEntry.Tags.SplitAndTrimOn(new char[] { ',' }),
                 Title = questionEntry.Title,
                 Views = questionEntry.Views,
+                Votes = questionEntry.Votes,
                 SelectedAnswer = questionEntry.SelectedAnswer,
                 Answers = answerEntries.Select(k => new AnswerResult
                 {
@@ -155,28 +157,23 @@ namespace Yaqaap.ServiceInterface
         {
             Guid userId = GetUserId();
 
+
+            VoteResponse response = new VoteResponse
+            {
+                Result = ErrorCode.OK,
+            };
+
             TableRepository tableRepository = new TableRepository();
 
+            bool isNew = false;
             bool updateTarget = true;
-            VoteEntry voteEntry;
-            string votePartitionKey;
-
-            // create answers
-            if (request.VoteTarget == VoteTarget.Answer)
-            {
-                votePartitionKey = request.VoteTarget + "|" + request.QuestionId + "|" + request.AnswerOwnerId;
-                voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
-            }
-            else
-            {
-                votePartitionKey = request.VoteTarget + "|" + request.QuestionId;
-                voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
-            }
-
+            string votePartitionKey = request.VoteTarget + "|" + request.QuestionId + "|" + request.OwnerId;
+            VoteEntry voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
 
             // Création d'un nouveau vote
             if (voteEntry == null)
             {
+                isNew = true;
                 voteEntry = new VoteEntry(votePartitionKey, userId)
                 {
                     Creation = DateTime.UtcNow,
@@ -193,27 +190,35 @@ namespace Yaqaap.ServiceInterface
 
             if (updateTarget)
             {
-                // insert le vote
-                tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
-
                 if (request.VoteTarget == VoteTarget.Answer)
                 {
-                    AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.AnswerOwnerId);
+                    AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.OwnerId);
+                    if (!isNew)
+                        answerEntry.Votes -= voteEntry.Value;
+
+                    voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
                     answerEntry.Votes += voteEntry.Value;
                     tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
+
+                    response.VoteValue = answerEntry.Votes;
                 }
                 else
                 {
-                    QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.QuestionOwnerId, request.QuestionId);
+                    QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.OwnerId, request.QuestionId);
+                    if (!isNew)
+                        questionEntry.Votes -= voteEntry.Value;
+
+                    voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
                     questionEntry.Votes += voteEntry.Value;
                     tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
+
+                    response.VoteValue = questionEntry.Votes;
                 }
+
+                // insert le vote
+                tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
             }
 
-            VoteResponse response = new VoteResponse
-            {
-                Result = ErrorCode.OK
-            };
 
 
             return response;
