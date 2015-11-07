@@ -31,6 +31,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         }
 
         public DateTime Creation { get; set; }
+        public DateTime Modification { get; set; }
 
         public string Content { get; set; }
 

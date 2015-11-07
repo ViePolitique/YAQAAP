@@ -20,11 +20,13 @@ namespace Yaqaap.ServiceInterface
 
             Guid creatorId = GetUserId();
 
+            DateTime dateTime = DateTime.UtcNow;
             QuestionEntry questionEntry = new QuestionEntry(creatorId, Guid.NewGuid())
             {
                 Title = request.Title,
                 Detail = request.Detail,
-                Creation = DateTime.UtcNow,
+                Creation = dateTime,
+                Modification = dateTime,
                 Tags = string.Join(",", request.Tags).ToLowerInvariant()
             };
 
@@ -126,10 +128,12 @@ namespace Yaqaap.ServiceInterface
             AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, userId);
             if (answerEntry == null)
             {
+                DateTime dateTime = DateTime.UtcNow;
                 answerEntry = new AnswerEntry(request.QuestionId, userId)
                 {
                     Content = request.Content,
-                    Creation = DateTime.UtcNow,
+                    Creation = dateTime,
+                    Modification = dateTime,
                     Votes = 0
                 };
 
@@ -141,8 +145,14 @@ namespace Yaqaap.ServiceInterface
                     tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
                 }
             }
+            else
+            {
+                // perform an edit
+                answerEntry.Content = request.Content;
+                answerEntry.Modification = DateTime.UtcNow;
+            }
 
-            tableRepository.InsertOrReplace(answerEntry, Tables.Answers);
+            tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
 
             AnswerResponse response = new AnswerResponse
             {
@@ -166,7 +176,6 @@ namespace Yaqaap.ServiceInterface
             TableRepository tableRepository = new TableRepository();
 
             bool isNew = false;
-            bool updateTarget = true;
             string votePartitionKey = request.VoteTarget + "|" + request.QuestionId + "|" + request.OwnerId;
             VoteEntry voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
 
@@ -174,10 +183,11 @@ namespace Yaqaap.ServiceInterface
             if (voteEntry == null)
             {
                 isNew = true;
+                DateTime dateTime = DateTime.UtcNow;
                 voteEntry = new VoteEntry(votePartitionKey, userId)
                 {
-                    Creation = DateTime.UtcNow,
-                    Modification = DateTime.UtcNow,
+                    Creation = dateTime,
+                    Modification = dateTime,
                     Value = request.VoteKind == VoteKind.Up ? 1 : -1
                 };
             }
@@ -185,39 +195,39 @@ namespace Yaqaap.ServiceInterface
             {
                 // s'il existe un vote existant et que sa valeur n'as pas changé
                 if (voteEntry.Value == (request.VoteKind == VoteKind.Up ? 1 : -1))
-                    updateTarget = false;
+                    return response;
+
+                voteEntry.Modification = DateTime.UtcNow;
             }
 
-            if (updateTarget)
+
+            if (request.VoteTarget == VoteTarget.Answer)
             {
-                if (request.VoteTarget == VoteTarget.Answer)
-                {
-                    AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.OwnerId);
-                    if (!isNew)
-                        answerEntry.Votes -= voteEntry.Value;
+                AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.OwnerId);
+                if (!isNew)
+                    answerEntry.Votes -= voteEntry.Value;
 
-                    voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
-                    answerEntry.Votes += voteEntry.Value;
-                    tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
+                voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
+                answerEntry.Votes += voteEntry.Value;
+                tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
 
-                    response.VoteValue = answerEntry.Votes;
-                }
-                else
-                {
-                    QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.OwnerId, request.QuestionId);
-                    if (!isNew)
-                        questionEntry.Votes -= voteEntry.Value;
-
-                    voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
-                    questionEntry.Votes += voteEntry.Value;
-                    tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
-
-                    response.VoteValue = questionEntry.Votes;
-                }
-
-                // insert le vote
-                tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
+                response.VoteValue = answerEntry.Votes;
             }
+            else
+            {
+                QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.OwnerId, request.QuestionId);
+                if (!isNew)
+                    questionEntry.Votes -= voteEntry.Value;
+
+                voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
+                questionEntry.Votes += voteEntry.Value;
+                tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
+
+                response.VoteValue = questionEntry.Votes;
+            }
+
+            // insert le vote
+            tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
 
 
 

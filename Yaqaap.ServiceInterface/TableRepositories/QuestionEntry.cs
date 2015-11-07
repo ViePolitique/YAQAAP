@@ -31,6 +31,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         }
 
         public DateTime Creation { get; set; }
+        public DateTime Modification { get; set; }
 
         public string Title { get; set; }
 
@@ -57,5 +58,6 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         /// UserId that posted the answer
         /// </summary>
         public Guid SelectedAnswer { get; set; }
+
     }
 }
