@@ -1,7 +1,7 @@
 # YAQAAP
 Yet another question and answser platform
 
-.NET, C#, Azure, NOSQL
+.NET, C#, Azure, NoSQL
 
 # Install
 
@@ -22,4 +22,4 @@ bower install
 # Deploy
 
 Yaqaap use Kudu to deploy into Azure Website. It download all dependency directly.
-Just right-click on Yaqapp project, and click Publish.
+Just right-click on Yaqapp project from Visual Studio, and click Publish.
