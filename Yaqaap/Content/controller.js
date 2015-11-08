@@ -403,6 +403,9 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                               // do what you do
                               $scope.question = data;
                               $scope.question.Detail = markdown.toHTML($scope.question.Detail);
+                              for (var i = 0; i < $scope.question.Answers.length; i++) {
+                                  $scope.question.Answers[i].Content = markdown.toHTML($scope.question.Answers[i].Content);
+                              }
                           })
                           .error(function (data, status, headers, config) {
 
