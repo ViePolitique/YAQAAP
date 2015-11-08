@@ -12,7 +12,7 @@ yaqaap.config([
                 templateUrl: "/Content/_Ask.html",
                 controller: "askController"
             })
-            .when("/Answers/:questionId", {
+            .when("/Answers/:questionId/:title", {
                 templateUrl: "/Content/_Answers.html",
                 controller: "answersController"
             })
@@ -245,7 +245,11 @@ function searchController($scope, $http, $location, $authService) {
         $http.get("/api/top")
                   .success(function (data, status, headers, config) {
                       // do what you do
+                      for (var i = 0; i < data.Questions.length; i++) {
+                          data.Questions[i].TitleUri = data.Questions[i].Title.replace(/\s/g, "-");
+                      }
                       $scope.topQuestions = data.Questions;
+
                   })
                   .error(function (data, status, headers, config) {
 
@@ -279,6 +283,9 @@ function searchController($scope, $http, $location, $authService) {
             $http.get("/api/search/" + $scope.search)
                 .success(function (data, status, headers, config) {
                     // do what you do
+                    for (var i = 0; i < data.Questions.length; i++) {
+                        data.Questions[i].TitleUri = data.Questions[i].Title.replace(/\s/g, "-");
+                    }
                     $scope.questions = data.Questions;
                 })
                 .error(function (data, status, headers, config) {

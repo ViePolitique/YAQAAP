@@ -11,7 +11,7 @@
     <hr />
     <div class="col-md-12">
         <div ng-repeat="question in questions">
-            <div><a href="/Answers/{{question.Id}}">{{question.Title}}</a>
+            <div><a href="/Answers/{{question.Id}}/{{question.TitleUri}}">{{question.Title}}</a>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                 <td>{{question.Votes}} vote</td>
                 <td>{{question.Answers}} answers</td>
                 <td>{{question.Views}} views</td>
-                <td><a href="/Answers/{{question.Id}}">{{question.Title}}</a></td>
+                <td><a href="/Answers/{{question.Id}}/{{question.TitleUri}}">{{question.Title}}</a></td>
             </tr>
         </table>
     </div>
