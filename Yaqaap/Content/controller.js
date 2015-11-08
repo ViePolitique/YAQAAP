@@ -192,11 +192,9 @@ function registerController($scope, $http, $authService, $location) {
             $http.post("/api/register", registerData)
                           .success(function (data, status, headers, config) {
                               // do what you do
-                              $scope.askResult = data.Result;
+                              $scope.registerResult = data.Result;
                           })
                           .error(function (data, status, headers, config) {
-
-                              $scope.askResult = undefined;
 
                               if (status === 401) {
                                   // handle redirecting to the login page
@@ -204,17 +202,18 @@ function registerController($scope, $http, $authService, $location) {
                               } else if (status === 500 || status === 503) {
                                   // retry the call and eventually handle too many failures
                               } else if (data != undefined) {
-                                  if (
-                                      data.responseStatus != null &&
-                                          data.responseStatus.errors != null &&
-                                          data.responseStatus.errors.length > 0)
+                                  if (data.ResponseStatus != null &&
+                                          data.ResponseStatus.Errors != null &&
+                                          data.ResponseStatus.Errors.length > 0)
                                       // handle validation error
                                   {
-                                      var errors = data.responseStatus.errors;
+                                      var errors = data.ResponseStatus.Errors;
+                                      $scope.registerResult = data.ResponseStatus.Message;
                                   } else {
                                       // handle non validation error
-                                      var errorCode = data.responseStatus.errorCode;
-                                      var message = data.responseStatus.message;
+                                      var errorCode = data.ResponseStatus.ErrorCode;
+                                      var message = data.ResponseStatus.Message;
+                                      $scope.registerResult = message;
                                   }
                               }
                           });

@@ -24,6 +24,7 @@
                 <div ng-if="registerResult == 'BadUsername'" class="alert alert-warning" role="alert">Please, provide us a valid username</div>
                 <div ng-if="registerResult == 'NeedPassword'" class="alert alert-warning" role="alert">Please, provide us a password</div>
                 <div ng-if="registerResult == 'BadPassword'" class="alert alert-warning" role="alert">Please, provide us a valid password</div>
+                <div ng-if="registerResult != undefined" class="alert alert-error" role="alert">{{registerResult}}</div>
             </div>
         </form>
     </div>
