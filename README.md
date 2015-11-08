@@ -1,6 +1,8 @@
 # YAQAAP
 Yet another question and answser platform
 
+.NET, C#, Azure, NOSQL
+
 # Install
 
 - Git clone this repository.
@@ -16,3 +18,8 @@ bower install
 ```
 <add key="storage" value="DefaultEndpointsProtocol=https;AccountName=yaqaap;AccountKey=BOVi0PPafizyc/VWvSkjv6/iDrDceILciqHGMkZEZMTI148/PW45ZtApvdVQ+gLI1S5KDZdd7uw80NW5B6nkmQ==" />
 ```
+
+# Deploy
+
+Yaqaap use Kudu to deploy into Azure Website. It download all dependency directly.
+Just right-click on Yaqapp project, and click Publish.
