@@ -33,6 +33,13 @@
     <div class="col-md-7">
         <div ng-bind-html="question.Detail">
         </div>
+        <div id="footer">
+            <div id="footer-content">
+                <span ng-repeat="tag in question.Tags">
+                    <button type="button" class="btn btn-info">{{tag}}</button>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -83,3 +90,13 @@
         </form>
     </div>
 </div>
+
+
+<script>
+
+    $("#answer-content").markdown({
+        resize: 'vertical',
+        hiddenButtons: ['Preview']
+    });
+
+</script>
