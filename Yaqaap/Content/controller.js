@@ -24,6 +24,10 @@ yaqaap.config([
                 templateUrl: "/Content/_Register.html",
                 controller: "registerController"
             })
+            .when("/User/:username", {
+                templateUrl: "/Content/_User.html",
+                controller: "userController"
+            })
             .when("/NotFound", {
                 templateUrl: "/Content/_NotFound.html"
             })
@@ -41,6 +45,7 @@ yaqaap.controller("signInController", ["$scope", "$http", "$authService", "$loca
 yaqaap.controller("registerController", ["$scope", "$http", "$authService", "$location", registerController]);
 yaqaap.controller("askController", ["$scope", "$http", "$location", askController]);
 yaqaap.controller("answersController", ["$scope", "$http", "$route", "$routeParams", "$location", answersController]);
+yaqaap.controller("userController", ["$scope", "$http", "$route", "$routeParams", "$location", userController]);
 yaqaap.controller("searchController", ["$scope", "$http", "$location", "$authService", searchController]);
 
 
@@ -398,6 +403,13 @@ function askController($scope, $http, $location) {
     };
 };
 
+
+function userController($scope, $http, $route, $routeParams, $location) {
+    // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).
+    var vm = this;
+
+    $scope.username = $routeParams.username;
+};
 
 function answersController($scope, $http, $route, $routeParams, $location) {
     // Using 'Controller As' syntax, so we assign this to the vm variable (for viewmodel).

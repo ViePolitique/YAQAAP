@@ -110,6 +110,7 @@
     <Content Include="Content\_Register.html" />
     <Content Include="Content\_Search.html" />
     <Content Include="Content\_SignIn.html" />
+    <Content Include="Content\_User.html" />
     <Content Include="Global.asax" />
     <Content Include="Content\controller.js" />
     <Content Include="Web.config">
