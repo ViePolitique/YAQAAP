@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Yaqaap.Framework;
@@ -369,6 +370,15 @@ namespace Yaqaap.ServiceInterface.TableRepositories
             CloudTable table = GetTable(tableName);
             TableResult tableResult = table.Execute(operation);
             return tableResult.Result as T;
+        }
+
+        public T[] Get<T>(string tableName, string partitionKey) where T : class, ITableEntity, new()
+        {
+            CloudTable table = GetTable(tableName);
+
+            return (from k in table.CreateQuery<T>()
+                    where k.PartitionKey == partitionKey
+                    select k).ToArray();
         }
     }
 }

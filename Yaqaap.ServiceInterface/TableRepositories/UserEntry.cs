@@ -66,5 +66,10 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public DateTime? LockedDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
+
+        public Guid GetUserId()
+        {
+            return Guid.Parse(PartitionKey);
+        }
     }
 }

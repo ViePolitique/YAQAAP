@@ -40,7 +40,7 @@ namespace Yaqaap
             //this.Plugins.Add(new PostmanFeature());
             //this.Plugins.Add(new CorsFeature());
 
-            Plugins.Add(new AuthFeature(() => new AuthUserSession(),
+            Plugins.Add(new AuthFeature(() => new AuthUserEntrySession(),
                   new IAuthProvider[] {
                     //new BasicAuthProvider(), //Sign-in with HTTP Basic Auth
                     new CredentialsAuthProvider(), //HTML Form post of UserName/Password credentials
@@ -50,6 +50,8 @@ namespace Yaqaap
 
             container.Register<ICacheClient>(new MemoryCacheClient());
             container.Register<IUserAuthRepository>(new AzureAuthProvider());
+
+            AuthenticateService.CurrentSessionFactory = () => new AuthUserEntrySession();
 
             this.Plugins.Add(new RazorFormat());
 

@@ -6,6 +6,7 @@ using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Support.Markdown;
 using Yaqaap.ServiceInterface.Business;
+using Yaqaap.ServiceInterface.ServiceStack;
 using Yaqaap.ServiceInterface.TableRepositories;
 using Yaqaap.ServiceModel;
 
@@ -18,7 +19,7 @@ namespace Yaqaap.ServiceInterface
             AskResponse response = new AskResponse();
             response.Result = ErrorCode.OK;
 
-            Guid creatorId = GetUserId();
+            Guid creatorId = UserSession.GetUserId();
 
             DateTime dateTime = DateTime.UtcNow;
             QuestionEntry questionEntry = new QuestionEntry(creatorId, Guid.NewGuid())
@@ -98,7 +99,7 @@ namespace Yaqaap.ServiceInterface
             {
                 Id = questionEntry.GetId(),
                 Creation = questionEntry.Creation,
-                Owner = CreateUserCard(questionEntry.GetUserId()),
+                Owner = CreateUserCard(tableRepository, questionEntry.GetUserId()),
                 Detail = questionEntry.Detail,
                 Tags = questionEntry.Tags.SplitAndTrimOn(new char[] { ',' }),
                 Title = questionEntry.Title,
@@ -107,7 +108,7 @@ namespace Yaqaap.ServiceInterface
                 SelectedAnswer = questionEntry.SelectedAnswer,
                 Answers = answerEntries.Select(k => new AnswerResult
                 {
-                    Owner = CreateUserCard(k.GetOwnerId()),
+                    Owner = CreateUserCard(tableRepository, k.GetOwnerId()),
                     Creation = k.Creation,
                     Content = k.Content,
                     Votes = k.Votes
@@ -120,7 +121,7 @@ namespace Yaqaap.ServiceInterface
 
         public object Any(Answer request)
         {
-            Guid userId = GetUserId();
+            Guid userId = UserSession.GetUserId();
 
             TableRepository tableRepository = new TableRepository();
 
@@ -165,7 +166,7 @@ namespace Yaqaap.ServiceInterface
 
         public object Any(Vote request)
         {
-            Guid userId = GetUserId();
+            Guid userId = UserSession.GetUserId();
 
 
             VoteResponse response = new VoteResponse
@@ -234,18 +235,16 @@ namespace Yaqaap.ServiceInterface
             return response;
         }
 
-        private Guid GetUserId()
-        {
-            //IAuthSession session = GetSession();
-            //return Guid.Parse(session.UserAuthId);
-            return Guid.Empty; // todo
-        }
+        private AuthUserEntrySession UserSession => SessionAs<AuthUserEntrySession>();
 
-        private UserCard CreateUserCard(Guid creatorId)
+        private UserCard CreateUserCard(TableRepository tableRepository, Guid creatorId)
         {
+            UserEntry user = tableRepository.Get<UserEntry>(Tables.Users, creatorId.ToString())?.FirstOrDefault();
+
             return new UserCard
             {
-                Id = creatorId
+                Id = creatorId,
+                Username = user?.UserName
             };
         }
     }

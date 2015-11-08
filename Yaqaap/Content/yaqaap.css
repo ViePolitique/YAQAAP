@@ -185,13 +185,19 @@
 }
 
 
-#footer {
+.footer {
     position: relative;
     min-height: 150px;
 }
 
-#footer-content {
+.footer-content {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+.footer-content-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }

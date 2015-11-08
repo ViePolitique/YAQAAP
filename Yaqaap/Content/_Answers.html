@@ -33,23 +33,34 @@
     <div class="col-md-7">
         <div ng-bind-html="question.Detail">
         </div>
-        <div id="footer">
-            <div id="footer-content">
-                <span ng-repeat="tag in question.Tags">
-                    <button type="button" class="btn btn-info">{{tag}}</button>
-                </span>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="footer">
+                    <div class="footer-content">
+                        <span ng-repeat="tag in question.Tags">
+                            <button type="button" class="btn btn-info">{{tag}}</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="footer">
+                    <div class="footer-content-right">
+                        <p><small><a href="/User/{{question.Owner.Username}}">{{question.Owner.Username}}</a></small></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div ng-if="question != undefined" id="answsersRow" ng-repeat="answer in question.Answers">
-    <div ng-if="question != undefined" class="row">
+    <div class="row">
         <div class="col-sm-8">
             <hr />
         </div>
     </div>
-    <div ng-if="question != undefined" class="row">
+    <div class="row">
         <div class="col-md-1">
             <div class="btn-group-vertical" role="group">
                 <button type="button" class="btn btn-default btn-lg" ng-click="vote(question.Id, answer.Owner.Id, 'answer', 'up')" style="border: none">
@@ -63,7 +74,19 @@
                 </button>
             </div>
         </div>
-        <div class="col-md-7" ng-bind-html="answer.Content">
+        <div class="col-md-7">
+            <div ng-bind-html="answer.Content"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="footer">
+                        <div class="footer-content-right">
+                            <p>
+                                <small><a href="/User/{{answer.Owner.Username}}">{{answer.Owner.Username}}</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
