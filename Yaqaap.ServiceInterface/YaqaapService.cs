@@ -99,7 +99,7 @@ namespace Yaqaap.ServiceInterface
             {
                 Id = questionEntry.GetId(),
                 Creation = questionEntry.Creation,
-                Owner = CreateUserCard(tableRepository, questionEntry.GetUserId()),
+                Owner = CreateUserCard(tableRepository, questionEntry.GetOwnerId()),
                 Detail = questionEntry.Detail,
                 Tags = questionEntry.Tags.SplitAndTrimOn(new char[] { ',' }),
                 Title = questionEntry.Title,
@@ -114,6 +114,17 @@ namespace Yaqaap.ServiceInterface
                     Votes = k.Votes
                 }).ToArray()
             };
+
+            // quest user vote for this question
+            if (UserSession.IsAuthenticated)
+            {
+                string votePartitionKey = VoteTarget.Question + "|" + questionId + "|" + questionEntry.GetOwnerId();
+                VoteEntry voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, UserSession.GetUserId());
+                if (voteEntry != null)
+                {
+                    answersResponse.VoteKind = voteEntry.Value == 1 ? VoteKind.Up : VoteKind.Down;
+                }
+            }
 
             return answersResponse;
         }
@@ -196,7 +207,10 @@ namespace Yaqaap.ServiceInterface
             {
                 // s'il existe un vote existant et que sa valeur n'as pas changé
                 if (voteEntry.Value == (request.VoteKind == VoteKind.Up ? 1 : -1))
+                {
+                    response.Result = ErrorCode.Aborted;
                     return response;
+                }
 
                 voteEntry.Modification = DateTime.UtcNow;
             }

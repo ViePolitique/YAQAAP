@@ -18,6 +18,7 @@ namespace Yaqaap.ServiceModel
         public DateTime Creation { get; set; }
         public long Views { get; set; }
         public int Votes { get; set; }
+        public VoteKind ? VoteKind { get; set; }
 
         public string Title { get; set; }
         public string Detail { get; set; }

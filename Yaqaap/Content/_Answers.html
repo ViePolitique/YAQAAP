@@ -16,13 +16,13 @@
 <div ng-if="question != undefined" class="row">
     <div class="col-md-1">
         <div class="btn-group-vertical" role="group">
-            <button type="button" class="btn btn-default btn-lg" ng-click="vote(question.Id, question.Owner.Id, 'question', 'up')" style="border: none">
+            <button type="button" ng-class="{voteUp: question.VoteKind === 'Up'}" class="btn btn-default btn-lg" ng-click="vote(question.Id, question.Owner.Id, 'question', 'Up')" style="border: none">
                 <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-default btn-lg" style="border: none">
                 <span ng-bind="question.Votes"></span>
             </button>
-            <button type="button" class="btn btn-default btn-lg" ng-click="vote(question.Id, question.Owner.Id, 'question', 'down')" style="border: none">
+            <button type="button" ng-class="{voteDown: question.VoteKind === 'Down'}"  class="btn btn-default btn-lg" ng-click="vote(question.Id, question.Owner.Id, 'question', 'Down')" style="border: none">
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-default btn-lg" style="border: none">

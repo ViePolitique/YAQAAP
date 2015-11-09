@@ -201,3 +201,22 @@
     bottom: 0;
     right: 0;
 }
+
+
+.voteUp, 
+.voteUp :hover,
+.voteUp:focus,
+.voteUp.focus,
+.voteUp:active {
+    color: green;
+    background-color: transparent;
+}
+
+.voteDown, 
+.voteDown :hover,
+.voteDown:focus,
+.voteDown:active {
+    color: orangered;
+    background-color: transparent;
+}
+

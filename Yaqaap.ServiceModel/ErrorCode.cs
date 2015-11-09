@@ -3,6 +3,7 @@
     public enum ErrorCode
     {
         Failed,
-        OK,    
+        OK,
+        Aborted
     }
 }

@@ -480,6 +480,7 @@ function answersController($scope, $http, $route, $routeParams, $location) {
 
                            if (data.Result === 'OK' && target ==='question') {
                                $scope.question.Votes = data.VoteValue;
+                               $scope.question.VoteKind = kind;
                            }
                            else if (data.Result === 'OK' && target === 'answer') {
                                $scope.question.Answers.filter(function(obj) {
