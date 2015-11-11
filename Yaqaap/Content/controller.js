@@ -464,6 +464,47 @@ function answersController($scope, $http, $route, $routeParams, $location) {
         return $scope.question.Votes;
     };
 
+    $scope.love = function (questionId) {
+
+        var loveData = {
+            questionId: questionId
+        };
+
+        $http.post("/api/love", loveData)
+                       .success(function (data, status, headers, config) {
+                           // do what you do
+                           //$scope.voteResult = data.Result;
+
+                           if (data.Result === 'OK') {
+                               $scope.question.Love = !$scope.question.Love;
+                           }
+                       })
+                       .error(function (data, status, headers, config) {
+
+                           //$scope.voteResult = undefined;
+
+                           if (status === 401) {
+                               // handle redirecting to the login page
+                               $location.path("/SignIn");
+                           } else if (status === 500 || status === 503) {
+                               // retry the call and eventually handle too many failures
+                           } else if (data != undefined) {
+                               if (
+                                   data.responseStatus != null &&
+                                       data.responseStatus.errors != null &&
+                                       data.responseStatus.errors.length > 0)
+                                   // handle validation error
+                               {
+                                   var errors = data.responseStatus.errors;
+                               } else {
+                                   // handle non validation error
+                                   var errorCode = data.responseStatus.errorCode;
+                                   var message = data.responseStatus.message;
+                               }
+                           }
+                       });
+    };
+
     $scope.vote = function (questionId, ownerId, target, kind) {
 
         var voteData = {
@@ -478,9 +519,9 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                            // do what you do
                            //$scope.voteResult = data.Result;
 
-                           if (data.Result === 'OK' && target ==='question') {
+                           if (data.Result === 'OK' && target === 'question') {
                                $scope.question.Votes = data.VoteValue;
-                               $scope.question.VoteKind = kind;
+                               $scope.question.VoteKind = data.VoteKind;
                            }
                            else if (data.Result === 'OK' && target === 'answer') {
                                var answer = $scope.question.Answers.filter(function(obj) {
@@ -488,7 +529,7 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                                })[0];
                                
                                answer.Votes = data.VoteValue;
-                               answer.VoteKind = kind;
+                               answer.VoteKind = data.VoteKind;
                            }
                        })
                        .error(function (data, status, headers, config) {

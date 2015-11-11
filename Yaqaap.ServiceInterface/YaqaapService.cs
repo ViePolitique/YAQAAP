@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Table;
 using ServiceStack;
@@ -94,6 +95,25 @@ namespace Yaqaap.ServiceInterface
                                            where k.PartitionKey == questionId.ToString()
                                            select k).ToArray();
 
+
+            UserQuestionEntry userQuestionEntry = UserSession.IsAuthenticated
+                                            ? tableRepository.Get<UserQuestionEntry>(Tables.UserQuestion, questionId, UserSession.GetUserId())
+                                            : null;
+
+            HashSet<string> votesUp = new HashSet<string>(userQuestionEntry?.VotesUp?.Split('|') ?? new string[] { });
+            HashSet<string> votesDown = new HashSet<string>(userQuestionEntry?.VotesDown?.Split('|') ?? new string[] { });
+
+            Func<Guid, VoteKind> getVoteKind = ownerId =>
+                                         {
+                                             if (votesUp.Contains(ownerId.ToString()))
+                                                 return VoteKind.Up;
+
+                                             if (votesDown.Contains(ownerId.ToString()))
+                                                 return VoteKind.Down;
+
+                                             return VoteKind.None;
+                                         };
+
             AnswersResponse answersResponse = new AnswersResponse
             {
                 Id = questionEntry.GetId(),
@@ -111,12 +131,13 @@ namespace Yaqaap.ServiceInterface
                     Creation = k.Creation,
                     Content = k.Content,
                     Votes = k.Votes,
-                    VoteKind = VoteHelper.GetVoteKindForUser(tableRepository, VoteTarget.Answer, questionId, k.GetOwnerId(), UserSession)
+                    VoteKind = getVoteKind(k.GetOwnerId())
                 }).ToArray()
             };
 
             // quest user vote for this question
-            answersResponse.VoteKind = VoteHelper.GetVoteKindForUser(tableRepository, VoteTarget.Question, questionId, questionEntry.GetOwnerId(), UserSession);
+            answersResponse.VoteKind = getVoteKind(questionId);
+            answersResponse.Love = userQuestionEntry?.Love ?? false;
 
             return answersResponse;
         }
@@ -172,7 +193,6 @@ namespace Yaqaap.ServiceInterface
         {
             Guid userId = UserSession.GetUserId();
 
-
             VoteResponse response = new VoteResponse
             {
                 Result = ErrorCode.OK,
@@ -180,67 +200,116 @@ namespace Yaqaap.ServiceInterface
 
             TableRepository tableRepository = new TableRepository();
 
-            bool isNew = false;
-            string votePartitionKey = request.VoteTarget + "|" + request.QuestionId + "|" + request.OwnerId;
-            VoteEntry voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, userId);
+            UserQuestionEntry userQuestionEntry = tableRepository.Get<UserQuestionEntry>(Tables.UserQuestion, request.QuestionId, userId);
 
             // Création d'un nouveau vote
-            if (voteEntry == null)
+            if (userQuestionEntry == null)
             {
-                isNew = true;
                 DateTime dateTime = DateTime.UtcNow;
-                voteEntry = new VoteEntry(votePartitionKey, userId)
+                userQuestionEntry = new UserQuestionEntry(request.QuestionId, userId)
                 {
                     Creation = dateTime,
-                    Modification = dateTime,
-                    Value = request.VoteKind == VoteKind.Up ? 1 : -1
+                    Modification = dateTime
                 };
             }
             else
             {
-                // s'il existe un vote existant et que sa valeur n'as pas changé
-                if (voteEntry.Value == (request.VoteKind == VoteKind.Up ? 1 : -1))
-                {
-                    response.Result = ErrorCode.Aborted;
-                    return response;
-                }
-
-                voteEntry.Modification = DateTime.UtcNow;
+                userQuestionEntry.Modification = DateTime.UtcNow;
             }
 
+            var target = request.VoteTarget == VoteTarget.Question ? request.QuestionId : request.OwnerId;
+
+            HashSet<string> votesUp = new HashSet<string>(userQuestionEntry.VotesUp?.Split('|') ?? new string[] { });
+            HashSet<string> votesDown = new HashSet<string>(userQuestionEntry.VotesDown?.Split('|') ?? new string[] { });
+
+            VoteKind oldValue = VoteKind.None;
+            if (votesUp.Contains(target.ToString()))
+                oldValue = VoteKind.Up;
+            else if (votesDown.Contains(target.ToString()))
+                oldValue = VoteKind.Down;
+
+            response.VoteKind = request.VoteKind;
+
+            votesUp.Remove(target.ToString());
+            votesDown.Remove(target.ToString());
+
+            if (response.VoteKind == oldValue) response.VoteKind = VoteKind.None;
+            else
+                switch (response.VoteKind)
+                {
+                    case VoteKind.Up:
+                        votesUp.Add(target.ToString());
+                        break;
+                    case VoteKind.Down:
+                        votesDown.Add(target.ToString());
+                        break;
+                }
+
+            userQuestionEntry.VotesUp = votesUp.Join("|");
+            userQuestionEntry.VotesDown = votesDown.Join("|");
 
             if (request.VoteTarget == VoteTarget.Answer)
             {
                 AnswerEntry answerEntry = tableRepository.Get<AnswerEntry>(Tables.Answers, request.QuestionId, request.OwnerId);
-                if (!isNew)
-                    answerEntry.Votes -= voteEntry.Value;
-
-                voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
-                answerEntry.Votes += voteEntry.Value;
+                answerEntry.Votes -= (int)oldValue;
+                answerEntry.Votes += (int)response.VoteKind;
                 tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
-
                 response.VoteValue = answerEntry.Votes;
             }
             else
             {
                 QuestionEntry questionEntry = tableRepository.Get<QuestionEntry>(Tables.Questions, request.OwnerId, request.QuestionId);
-                if (!isNew)
-                    questionEntry.Votes -= voteEntry.Value;
-
-                voteEntry.Value = (request.VoteKind == VoteKind.Up ? 1 : -1);
-                questionEntry.Votes += voteEntry.Value;
+                questionEntry.Votes -= (int)oldValue;
+                questionEntry.Votes += (int)response.VoteKind;
                 tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
-
                 response.VoteValue = questionEntry.Votes;
             }
 
             // insert le vote
-            tableRepository.InsertOrReplace(voteEntry, Tables.Votes);
-
-
+            tableRepository.InsertOrReplace(userQuestionEntry, Tables.UserQuestion);
 
             return response;
         }
+
+
+        public object Any(Love request)
+        {
+            Guid userId = UserSession.GetUserId();
+
+            LoveResponse response = new LoveResponse
+            {
+                Result = ErrorCode.OK,
+            };
+
+            TableRepository tableRepository = new TableRepository();
+
+            UserQuestionEntry userQuestionEntry = tableRepository.Get<UserQuestionEntry>(Tables.UserQuestion, request.QuestionId, userId);
+
+            // Création d'un nouveau vote
+            if (userQuestionEntry == null)
+            {
+                DateTime dateTime = DateTime.UtcNow;
+                userQuestionEntry = new UserQuestionEntry(request.QuestionId, userId)
+                {
+                    Creation = dateTime,
+                    Modification = dateTime
+                };
+            }
+            else
+            {
+                userQuestionEntry.Modification = DateTime.UtcNow;
+            }
+
+
+            userQuestionEntry.Love = !userQuestionEntry.Love;
+
+            // insert le vote
+            tableRepository.InsertOrReplace(userQuestionEntry, Tables.UserQuestion);
+
+            return response;
+        }
+
+
 
         private AuthUserEntrySession UserSession => SessionAs<AuthUserEntrySession>();
 

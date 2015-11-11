@@ -25,8 +25,8 @@
             <button type="button" ng-class="{voteDown: question.VoteKind === 'Down'}"  class="btn btn-default btn-lg" ng-click="vote(question.Id, question.Owner.Id, 'question', 'Down')" style="border: none">
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
-            <button type="button" class="btn btn-default btn-lg" style="border: none">
-                <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+            <button type="button" class="btn btn-default btn-lg" ng-click="love(question.Id)" style="border: none">
+                <span  class="glyphicon" ng-class="{'glyphicon-heart-empty': !question.Love, 'glyphicon-heart love': question.Love}" aria-hidden="true"></span>
             </button>
         </div>
     </div>

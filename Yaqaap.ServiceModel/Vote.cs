@@ -5,8 +5,9 @@ namespace Yaqaap.ServiceModel
 {
     public enum VoteKind
     {
-        Up,
-        Down
+        None = 0,
+        Up = 1,
+        Down = -1
     }
 
     public enum VoteTarget
@@ -35,5 +36,6 @@ namespace Yaqaap.ServiceModel
     {
         public ErrorCode Result { get; set; }
         public int VoteValue { get; set; }
+        public VoteKind VoteKind { get; set; }
     }
 }

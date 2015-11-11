@@ -3,13 +3,13 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Yaqaap.ServiceInterface.TableRepositories
 {
-    public class VoteEntry : TableEntity
+    public class LoveEntry : TableEntity
     {
-        public VoteEntry()
+        public LoveEntry()
         {
         }
 
-        public VoteEntry(string targetId, Guid ownerId)
+        public LoveEntry(string targetId, Guid ownerId)
         {
             PartitionKey = targetId;
             RowKey = ownerId.ToString();
@@ -18,7 +18,5 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public DateTime Creation { get; set; }
 
         public DateTime Modification { get; set; }
-
-        public int Value { get; set; }
     }
 }
