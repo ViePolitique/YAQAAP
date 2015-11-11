@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using Microsoft.WindowsAzure.Storage.Table;
 using ServiceStack;
 using ServiceStack.Auth;
@@ -111,23 +110,17 @@ namespace Yaqaap.ServiceInterface
                     Owner = CreateUserCard(tableRepository, k.GetOwnerId()),
                     Creation = k.Creation,
                     Content = k.Content,
-                    Votes = k.Votes
+                    Votes = k.Votes,
+                    VoteKind = VoteHelper.GetVoteKindForUser(tableRepository, VoteTarget.Answer, questionId, k.GetOwnerId(), UserSession)
                 }).ToArray()
             };
 
             // quest user vote for this question
-            if (UserSession.IsAuthenticated)
-            {
-                string votePartitionKey = VoteTarget.Question + "|" + questionId + "|" + questionEntry.GetOwnerId();
-                VoteEntry voteEntry = tableRepository.Get<VoteEntry>(Tables.Votes, votePartitionKey, UserSession.GetUserId());
-                if (voteEntry != null)
-                {
-                    answersResponse.VoteKind = voteEntry.Value == 1 ? VoteKind.Up : VoteKind.Down;
-                }
-            }
+            answersResponse.VoteKind = VoteHelper.GetVoteKindForUser(tableRepository, VoteTarget.Question, questionId, questionEntry.GetOwnerId(), UserSession);
 
             return answersResponse;
         }
+
 
 
         public object Any(Answer request)

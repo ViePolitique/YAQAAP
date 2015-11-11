@@ -34,6 +34,7 @@ namespace Yaqaap.ServiceModel
         public UserCard Owner { get; set; }
         public DateTime Creation { get; set; }
         public int Votes { get; set; }
+        public VoteKind? VoteKind { get; set; }
 
         public string Content { get; set; }
     }

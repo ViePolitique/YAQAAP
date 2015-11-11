@@ -483,9 +483,12 @@ function answersController($scope, $http, $route, $routeParams, $location) {
                                $scope.question.VoteKind = kind;
                            }
                            else if (data.Result === 'OK' && target === 'answer') {
-                               $scope.question.Answers.filter(function(obj) {
+                               var answer = $scope.question.Answers.filter(function(obj) {
                                    return obj.Owner.Id === ownerId;
-                               })[0].Votes = data.VoteValue;
+                               })[0];
+                               
+                               answer.Votes = data.VoteValue;
+                               answer.VoteKind = kind;
                            }
                        })
                        .error(function (data, status, headers, config) {

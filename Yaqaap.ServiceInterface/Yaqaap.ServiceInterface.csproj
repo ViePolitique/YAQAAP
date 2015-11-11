@@ -106,19 +106,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\VoteHelper.cs" />
     <Compile Include="ServiceStack\AuthUserEntrySession.cs" />
     <Compile Include="ServiceStack\AzureAuthProvider.cs" />
     <Compile Include="Business\IndexHelper.cs" />
     <Compile Include="ServiceStack\AzureRegisterService.cs" />
     <Compile Include="ServiceStack\AzureRegistrationFeature.cs" />
+    <Compile Include="TableRepositories\Tables.cs" />
     <Compile Include="TableRepositories\VoteEntry.cs" />
     <Compile Include="YaqaapService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableRepositories\AnswerEntry.cs" />
     <Compile Include="TableRepositories\IndexEntry.cs" />
     <Compile Include="TableRepositories\QuestionEntry.cs" />
-    <Compile Include="TableRepositories\TableEntityHelper.cs" />
-    <Compile Include="TableRepositories\TableRepository.cs" />
     <Compile Include="TableRepositories\UserEntry.cs" />
   </ItemGroup>
   <ItemGroup>
