@@ -1,30 +1,41 @@
 ﻿<div class="row">
     <div class="col-md-4">
-        <form>
+        <form name="registerForm" autocomplete="off">
             <div class="form-group">
-                <input class="form-control input-lg" ng-model="email" id="email" type="text" placeholder="email">
+                <input class="form-control input-lg" ng-model="email" id="email" name="email" type="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="email" ng-minlength="5" ng-maxlength="100" required ng-focus>
             </div>
             <div class="form-group">
-                <input class="form-control input-lg" ng-model="username" id="username" type="text" placeholder="username">
+                <input class="form-control input-lg" ng-model="username" id="username" name="username" type="text" placeholder="username" ng-minlength="3" ng-maxlength="20" required ng-focus>
             </div>
             <div class="form-group">
-                <input class="form-control input-lg" ng-model="password" id="password" type="password" placeholder="password">
+                <input class="form-control input-lg" ng-model="password" is="password" name="password" type="password" placeholder="password" ng-minlength="6" required ng-focus>
             </div>
             <div class="form-group">
-                <input class="form-control input-lg" ng-model="confirmPassword" id="confirmPassword" type="password" placeholder="confirm your password">
+                <input class="form-control input-lg" ng-model="confirmPassword" id="confirmPassword" name="confirmPassword" type="password" placeholder="confirm your password" required match-password="password" ng-focus>
             </div>
             <div class="form-group">
-                <a class="btn btn-primary btn-lg" id="register" ng-click="register()" ng-disable="!registering">Register</a>
+                <a class="btn btn-primary btn-lg" id="register" ng-click="register()" ng-disabled="registering || registerForm.$invalid">Register</a>
             </div>
             <div class="form-group">
-                <div ng-if="registerResult == 'DifferentPassword'" class="alert alert-warning" role="alert">Your passwords are not equals</div>
-                <div ng-if="registerResult == 'NeedEmail'" class="alert alert-warning" role="alert">Please, provide us an email</div>
-                <div ng-if="registerResult == 'BadEmail'" class="alert alert-warning" role="alert">Please, provide us a valid email</div>
-                <div ng-if="registerResult == 'NeedUsername'" class="alert alert-warning" role="alert">Please, provide us an username</div>
-                <div ng-if="registerResult == 'BadUsername'" class="alert alert-warning" role="alert">Please, provide us a valid username</div>
-                <div ng-if="registerResult == 'NeedPassword'" class="alert alert-warning" role="alert">Please, provide us a password</div>
-                <div ng-if="registerResult == 'BadPassword'" class="alert alert-warning" role="alert">Please, provide us a valid password</div>
-                <div ng-if="registerResult != undefined" class="alert alert-error" role="alert">{{registerResult}}</div>
+                <div ng-if="registerForm.email.$dirty && registerForm.email.$invalid && !registerForm.email.$focused" ng-messages="registerForm.email.$error">
+                    <div class="alert alert-warning" role="alert" ng-message="required">Please, provide us an email</div>
+                    <div class="alert alert-warning" role="alert" ng-message="email">Please, provide us a valid email</div>
+                    <div class="alert alert-warning" role="alert" ng-message="minlength, maxLength">Your email must be between 5 and 100 characters long</div>
+                </div>
+                <div ng-if="registerForm.username.$dirty && registerForm.username.$invalid && !registerForm.username.$focused" ng-messages="registerForm.username.$error">
+                    <div class="alert alert-warning" role="alert" ng-message="required">Please, provide us a valid username</div>
+                    <div class="alert alert-warning" role="alert" ng-message="minlength, maxlength">Your username must be between 3 and 20 characters long</div>
+                </div>
+                <div ng-if="registerForm.password.$dirty && registerForm.password.$invalid && !registerForm.password.$focused" ng-messages="registerForm.password.$error">
+                    <div class="alert alert-warning" role="alert" ng-message="required">Please, provide us a password</div>
+                    <div class="alert alert-warning" role="alert" ng-message="minlength">Your password is required to be at least 6 characters</div>
+                </div>
+                <div ng-if="registerForm.confirmPassword.$dirty && registerForm.confirmPassword.$invalid && !registerForm.confirmPassword.$focused" ng-messages="registerForm.confirmPassword.$error">
+                    <div class="alert alert-warning" role="alert" ng-message="passwordMatch">Your passwords are not equals</div>
+                </div>
+                <div ng-if="registerResult != undefined">
+                    <div class="alert alert-warning" role="alert">{{registerResult}}</div>
+                </div>
             </div>
         </form>
     </div>

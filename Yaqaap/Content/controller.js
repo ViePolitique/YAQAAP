@@ -1,4 +1,4 @@
-var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate"]);
+var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate", "ngMessages", "ngPassword"]);
 
 yaqaap.config([
     "$routeProvider", "$locationProvider",
@@ -37,7 +37,7 @@ yaqaap.config([
     }
 ]);
 
-yaqaap.service("$authService", authService);
+yaqaap.service("$authService", ["$http", "$location", authService]);
 
 
 yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$authService", "$location", yaqaapController]);
@@ -49,9 +49,7 @@ yaqaap.controller("userController", ["$scope", "$http", "$route", "$routeParams"
 yaqaap.controller("searchController", ["$scope", "$http", "$location", "$authService", searchController]);
 
 
-function authService() {
-
-    var userId;
+function authService($http, $location) {
 
     this.isAuth = function () {
         return this.userId != undefined;
@@ -63,6 +61,47 @@ function authService() {
 
     this.setUserId = function (userId) {
         this.userId = userId;
+    };
+
+    this.signIn = function(username, password) {
+        var authData = {
+            username: username,
+            password: password
+        };
+
+        var me = this;
+
+        $http.post("/auth", authData)
+                      .success(function (data, status, headers, config) {
+                          // do what you do
+                          // $scope.askResult = data.Result;
+                          me.setUserId(username);
+                          $location.path("/");
+                      })
+                      .error(function (data, status, headers, config) {
+
+                          //$scope.askResult = undefined;
+
+                          if (status === 401) {
+                              // handle redirecting to the login page
+                              //$location.path("/SignIn");
+                          } else if (status === 500 || status === 503) {
+                              // retry the call and eventually handle too many failures
+                          } else if (data != undefined) {
+                              if (
+                                  data.responseStatus != null &&
+                                      data.responseStatus.errors != null &&
+                                      data.responseStatus.errors.length > 0)
+                                  // handle validation error
+                              {
+                                  var errors = data.responseStatus.errors;
+                              } else {
+                                  // handle non validation error
+                                  var errorCode = data.responseStatus.errorCode;
+                                  var message = data.responseStatus.message;
+                              }
+                          }
+                      });
     };
 };
 
@@ -101,42 +140,7 @@ function signInController($scope, $http, $authService, $location) {
 
             if ($scope.username != undefined && $scope.username !== '') {
 
-                var authData = {
-                    username: $scope.username,
-                    password: $scope.password
-                };
-
-                $http.post("/auth", authData)
-                              .success(function (data, status, headers, config) {
-                                  // do what you do
-                                  // $scope.askResult = data.Result;
-                                  $authService.setUserId($scope.username);
-                                  $location.path("/");
-                              })
-                              .error(function (data, status, headers, config) {
-
-                                  //$scope.askResult = undefined;
-
-                                  if (status === 401) {
-                                      // handle redirecting to the login page
-                                      //$location.path("/SignIn");
-                                  } else if (status === 500 || status === 503) {
-                                      // retry the call and eventually handle too many failures
-                                  } else if (data != undefined) {
-                                      if (
-                                          data.responseStatus != null &&
-                                              data.responseStatus.errors != null &&
-                                              data.responseStatus.errors.length > 0)
-                                          // handle validation error
-                                      {
-                                          var errors = data.responseStatus.errors;
-                                      } else {
-                                          // handle non validation error
-                                          var errorCode = data.responseStatus.errorCode;
-                                          var message = data.responseStatus.message;
-                                      }
-                                  }
-                              });
+                $authService.signIn($scope.username, $scope.password);
             }
         } finally {
             $scope.signing = false;
@@ -157,9 +161,8 @@ function registerController($scope, $http, $authService, $location) {
 
     $scope.register = function () {
 
-
         try {
-
+            $scope.registerResult = undefined;
             $scope.registering = true;
 
             if ($authService.getUserId() != undefined) {
@@ -167,37 +170,17 @@ function registerController($scope, $http, $authService, $location) {
                 return;
             }
 
-
-            if ($scope.email == undefined || $scope.email === '') {
-                $scope.registerResult = 'NeedEmail';
-                return;
-            }
-
-            if ($scope.username == undefined || $scope.username === '') {
-                $scope.registerResult = 'NeedUsername';
-                return;
-            }
-
-            if ($scope.password == undefined || $scope.password === '') {
-                $scope.registerResult = 'NeedPassword';
-                return;
-            }
-
-            if ($scope.password !== $scope.confirmPassword) {
-                $scope.registerResult = 'DifferentPassword';
-                return;
-            }
-
             var registerData = {
                 email: $scope.email,
                 username: $scope.username,
-                password: $scope.password,
+                password: $scope.password
             };
 
             $http.post("/api/register", registerData)
                           .success(function (data, status, headers, config) {
                               // do what you do
-                              $scope.registerResult = data.Result;
+                              // $scope.registerResult = data.Result;
+                              $authService.signIn($scope.username, $scope.password);
                           })
                           .error(function (data, status, headers, config) {
 
@@ -222,9 +205,6 @@ function registerController($scope, $http, $authService, $location) {
                                   }
                               }
                           });
-
-
-            $scope.registerResult = 'OK';
         } finally {
             $scope.registering = false;
         }
@@ -614,3 +594,49 @@ function answersController($scope, $http, $route, $routeParams, $location) {
 
     };
 };
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+
+
+var compareTo = function () {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=compareTo"
+        },
+        link: function (scope, element, attributes, ngModel) {
+
+            ngModel.$validators.compareTo = function (modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+
+            scope.$watch("otherModelValue", function () {
+                ngModel.$validate();
+            });
+        }
+    };
+};
+
+var ngFocus = function() {
+    var FOCUS_CLASS = "ng-focused";
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attrs, ctrl) {
+            ctrl.$focused = false;
+            element.bind('focus', function(evt) {
+                element.addClass(FOCUS_CLASS);
+                scope.$apply(function() { ctrl.$focused = true; });
+            }).bind('blur', function(evt) {
+                element.removeClass(FOCUS_CLASS);
+                scope.$apply(function() { ctrl.$focused = false; });
+            });
+        }
+    }
+};
+
+yaqaap.directive("compareTo", compareTo);
+yaqaap.directive('ngFocus', ngFocus);
