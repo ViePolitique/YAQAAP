@@ -132,6 +132,7 @@
     <Content Include="default.cshtml" />
     <Content Include="Fonts\Tangerine_Bold.ttf" />
     <Content Include="Content\_NotFound.html" />
+    <Content Include="bower.json" />
     <None Include="Properties\PublishProfiles\Yaqaap.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
