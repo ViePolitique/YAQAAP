@@ -1,5 +1,5 @@
 # YAQAAP
-Yet another question and answser platform
+Yet another question and answer platform
 
 .NET, C#, Azure, NoSQL
 
