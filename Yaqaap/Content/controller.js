@@ -1,4 +1,4 @@
-var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate", "ngMessages", "ngPassword"]);
+var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate", "ngMessages", "ngPassword", "angular-humanize-duration"]);
 
 yaqaap.config([
     "$routeProvider", "$locationProvider",
@@ -389,6 +389,43 @@ function userController($scope, $http, $route, $routeParams, $location) {
     var vm = this;
 
     $scope.username = $routeParams.username;
+
+    $scope.getUser = function () {
+
+        $http.get("/api/user/" + $routeParams.username)
+                  .success(function (data, status, headers, config) {
+                      // do what you do
+                      $scope.user = data;
+                      $scope.user.Created = new Date() - new Date($scope.user.Created);
+                //$scope.user.Created = new Date().getMilliseconds() - new Date($scope.user.Created).getMilliseconds();
+            })
+                  .error(function (data, status, headers, config) {
+
+                      $scope.topQuestions = undefined;
+
+                      if (status === 401) {
+                          // handle redirecting to the login page
+                          $location.path("/SignIn");
+                      } else if (status === 500 || status === 503) {
+                          // retry the call and eventually handle too many failures
+                      } else if (data != undefined) {
+                          if (
+                              data.responseStatus != null &&
+                              data.responseStatus.errors != null &&
+                              data.responseStatus.errors.length > 0)
+                              // handle validation error
+                          {
+                              var errors = data.responseStatus.errors;
+                          } else {
+                              // handle non validation error
+                              var errorCode = data.responseStatus.errorCode;
+                              var message = data.responseStatus.message;
+                          }
+                      }
+                  });
+    };
+
+    $scope.getUser();
 };
 
 function answersController($scope, $http, $route, $routeParams, $location) {

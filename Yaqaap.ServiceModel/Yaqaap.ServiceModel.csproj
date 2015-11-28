@@ -69,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="Top.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Vote.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Microsoft.WindowsAzure.Storage.Table;
 using ServiceStack;
 using ServiceStack.Auth;
@@ -15,6 +16,36 @@ namespace Yaqaap.ServiceInterface
 {
     public class YaqaapService : Service
     {
+        public object Any(User request)
+        {
+            TableRepository tableRepository = new TableRepository();
+            var userQuery = tableRepository.GetTable(Tables.Users).CreateQuery<UserEntry>();
+
+            string username = request.Username;
+            username = TableEntityHelper.RemoveDiacritics(username);
+            username = TableEntityHelper.ToAzureKeyString(username);
+
+            var user = (from k in userQuery
+                        where k.RowKey == username
+                        select k).FirstOrDefault();
+
+            if (user == null)
+                return HttpError.NotFound(username + " do not exist");
+
+            var badges = tableRepository.Get<UserBadgeEntry>(Tables.UserBadges, user.GetUserId().ToString());
+
+            // "No similar question found... yet !"
+            return new UserResponse
+            {
+                Created = user.CreatedDate,
+                Badges = badges.Select(k => new BadgeResponse
+                {
+                    Name = k.GetName(),
+                    Awarded = k.Awarded,
+                }).ToArray()
+            };
+        }
+
         public object Any(Ask request)
         {
             AskResponse response = new AskResponse();
@@ -287,7 +318,7 @@ namespace Yaqaap.ServiceInterface
                         case 1: AllBadges.Padawan.CreateIfNotExist(tableRepository, questionEntry.GetOwnerId()); break;
                         case 10: AllBadges.NiceQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId); break;
                         case 25: AllBadges.GoodQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId); break;
-                        case 100: AllBadges.GreatQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId);break;
+                        case 100: AllBadges.GreatQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId); break;
                     }
                 }
             }

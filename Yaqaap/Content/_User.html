@@ -9,6 +9,17 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div class="alert alert-warning" role="alert">Coming soon...</div>
+        <h3>Badges</h3>
+        <table class="table  table-condensed">
+            <tr ng-repeat="badge in user.Badges">
+                <td>{{badge.Name}}</td>
+                <td>Awarded {{badge.Awarded | date:"MMM d''''yy ' at ' H:mm" }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h3>Membership</h3>
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        <span class="">Member for {{user.Created | humanizeDuration:{ largest: 2 } }}</span>
     </div>
 </div>

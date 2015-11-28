@@ -9,6 +9,7 @@ using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Caching;
 using ServiceStack.Razor;
+using ServiceStack.Text;
 using Yaqaap.Framework;
 using Yaqaap.ServiceInterface;
 using Yaqaap.ServiceInterface.ServiceStack;
@@ -58,6 +59,9 @@ namespace Yaqaap
             // Hack pour que le F5 fonctionne avec angular-route
             this.CustomErrorHttpHandlers[HttpStatusCode.NotFound] = new RazorHandler("/");
             //this.CustomErrorHttpHandlers[HttpStatusCode.Unauthorized] = new RazorHandler("/login");
+
+
+            JsConfig.DateHandler = DateHandler.ISO8601;
         }
 
         public override RouteAttribute[] GetRouteAttributes(Type requestType)

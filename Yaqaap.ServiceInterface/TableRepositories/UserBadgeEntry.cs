@@ -22,5 +22,10 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public DateTime Awarded { get; set; }
 
         public Guid? QuestionId { get; set; }
+
+        public string GetName()
+        {
+            return RowKey;
+        }
     }
 }
