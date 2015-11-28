@@ -6,6 +6,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
         public const string Indexes = "indexes";
         public const string Answers = "answers";
         public const string Users = "users";
-        public static string UserQuestion = "userQuestion";
+        public const string UserQuestion = "userQuestion";
+        public const string UserBadges = "userBadges";
     }
 }

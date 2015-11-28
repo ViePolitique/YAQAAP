@@ -23,8 +23,8 @@ namespace Yaqaap.ServiceModel
         public Guid QuestionId { get; set; }
 
         /// <summary>
-        /// If VoteTarget if Question => it's questionOwnerId
-        /// If VoteTarget if Answer => it's answerOwnerId
+        /// If VoteTarget is Question => it's questionOwnerId
+        /// If VoteTarget is Answer => it's answerOwnerId
         /// </summary>
         public Guid OwnerId { get; set; }
 

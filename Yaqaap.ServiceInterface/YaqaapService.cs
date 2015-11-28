@@ -6,6 +6,7 @@ using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Support.Markdown;
 using Yaqaap.ServiceInterface.Business;
+using Yaqaap.ServiceInterface.Business.Badges;
 using Yaqaap.ServiceInterface.ServiceStack;
 using Yaqaap.ServiceInterface.TableRepositories;
 using Yaqaap.ServiceModel;
@@ -127,11 +128,11 @@ namespace Yaqaap.ServiceInterface
                 SelectedAnswer = questionEntry.SelectedAnswer,
                 Answers = answerEntries.Select(k => new AnswerResult
                 {
-                    Owner = CreateUserCard(tableRepository, k.GetOwnerId()),
+                    Owner = CreateUserCard(tableRepository, k.GetAnswerOwnerId()),
                     Creation = k.Creation,
                     Content = k.Content,
                     Votes = k.Votes,
-                    VoteKind = getVoteKind(k.GetOwnerId())
+                    VoteKind = getVoteKind(k.GetAnswerOwnerId())
                 }).ToArray()
             };
 
@@ -217,7 +218,7 @@ namespace Yaqaap.ServiceInterface
                 userQuestionEntry.Modification = DateTime.UtcNow;
             }
 
-            var target = request.VoteTarget == VoteTarget.Question ? request.QuestionId : request.OwnerId;
+            Guid target = request.VoteTarget == VoteTarget.Question ? request.QuestionId : request.OwnerId;
 
             HashSet<string> votesUp = new HashSet<string>(userQuestionEntry.VotesUp?.Split('|') ?? new string[] { });
             HashSet<string> votesDown = new HashSet<string>(userQuestionEntry.VotesDown?.Split('|') ?? new string[] { });
@@ -235,6 +236,7 @@ namespace Yaqaap.ServiceInterface
 
             if (response.VoteKind == oldValue) response.VoteKind = VoteKind.None;
             else
+            {
                 switch (response.VoteKind)
                 {
                     case VoteKind.Up:
@@ -244,6 +246,7 @@ namespace Yaqaap.ServiceInterface
                         votesDown.Add(target.ToString());
                         break;
                 }
+            }
 
             userQuestionEntry.VotesUp = votesUp.Join("|");
             userQuestionEntry.VotesDown = votesDown.Join("|");
@@ -255,6 +258,18 @@ namespace Yaqaap.ServiceInterface
                 answerEntry.Votes += (int)response.VoteKind;
                 tableRepository.InsertOrMerge(answerEntry, Tables.Answers);
                 response.VoteValue = answerEntry.Votes;
+
+                // badges
+                if (response.VoteKind == VoteKind.Up)
+                {
+                    switch (answerEntry.Votes)
+                    {
+                        case 1: AllBadges.Approved.CreateIfNotExist(tableRepository, answerEntry.GetAnswerOwnerId()); break;
+                        case 10: AllBadges.NiceAnswer.CreateForQuestion(tableRepository, answerEntry.GetAnswerOwnerId(), request.QuestionId); break;
+                        case 25: AllBadges.GoodAnswer.CreateForQuestion(tableRepository, answerEntry.GetAnswerOwnerId(), request.QuestionId); break;
+                        case 100: AllBadges.GreatAnswer.CreateForQuestion(tableRepository, answerEntry.GetAnswerOwnerId(), request.QuestionId); break;
+                    }
+                }
             }
             else
             {
@@ -263,10 +278,29 @@ namespace Yaqaap.ServiceInterface
                 questionEntry.Votes += (int)response.VoteKind;
                 tableRepository.InsertOrMerge(questionEntry, Tables.Questions);
                 response.VoteValue = questionEntry.Votes;
+
+                // badges
+                if (response.VoteKind == VoteKind.Up)
+                {
+                    switch (questionEntry.Votes)
+                    {
+                        case 1: AllBadges.Padawan.CreateIfNotExist(tableRepository, questionEntry.GetOwnerId()); break;
+                        case 10: AllBadges.NiceQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId); break;
+                        case 25: AllBadges.GoodQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId); break;
+                        case 100: AllBadges.GreatQuestion.CreateForQuestion(tableRepository, questionEntry.GetOwnerId(), request.QuestionId);break;
+                    }
+                }
             }
 
             // insert le vote
             tableRepository.InsertOrReplace(userQuestionEntry, Tables.UserQuestion);
+
+
+            // badges
+            if (response.VoteKind == VoteKind.Up)
+                AllBadges.Supporter.CreateIfNotExist(tableRepository, userId);
+            else if (response.VoteKind == VoteKind.Down)
+                AllBadges.Critic.CreateIfNotExist(tableRepository, userId);
 
             return response;
         }

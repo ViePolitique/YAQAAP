@@ -25,7 +25,7 @@ namespace Yaqaap.ServiceInterface.TableRepositories
             return Guid.Parse(PartitionKey);
         }
 
-        public Guid GetOwnerId()
+        public Guid GetAnswerOwnerId()
         {
             return Guid.Parse(RowKey);
         }

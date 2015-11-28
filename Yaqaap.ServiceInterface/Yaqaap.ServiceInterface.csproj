@@ -106,11 +106,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Badges\AllBadges.cs" />
+    <Compile Include="Business\Badges\Badge.cs" />
+    <Compile Include="Business\Badges\BadgeCategory.cs" />
     <Compile Include="ServiceStack\AuthUserEntrySession.cs" />
     <Compile Include="ServiceStack\AzureAuthProvider.cs" />
     <Compile Include="Business\IndexHelper.cs" />
     <Compile Include="ServiceStack\AzureRegisterService.cs" />
     <Compile Include="ServiceStack\AzureRegistrationFeature.cs" />
+    <Compile Include="TableRepositories\UserBadgeEntry.cs" />
     <Compile Include="TableRepositories\LoveEntry.cs" />
     <Compile Include="TableRepositories\Tables.cs" />
     <Compile Include="TableRepositories\UserQuestionEntry.cs" />
