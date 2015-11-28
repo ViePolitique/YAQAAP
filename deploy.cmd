@@ -69,12 +69,12 @@ echo Handling .NET Web Application deployment.
 
 :: 0 install bower
 echo Execute Bower
-IF EXIST "%DEPLOYMENT_TARGET%\bower.json" (
+::IF EXIST "%DEPLOYMENT_TARGET%\bower.json" (
   pushd "%DEPLOYMENT_TARGET%"
   call bower install
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
-)
+::)
 
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
