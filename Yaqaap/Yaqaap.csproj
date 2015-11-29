@@ -132,12 +132,8 @@
     <Content Include="default.cshtml" />
     <Content Include="Fonts\Tangerine_Bold.ttf" />
     <Content Include="Content\_NotFound.html" />
-    <None Include="bower.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include=".bowerrc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="bower.json" />
+    <Content Include=".bowerrc" />
     <None Include="Properties\PublishProfiles\Yaqaap.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
