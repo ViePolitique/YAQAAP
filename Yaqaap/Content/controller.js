@@ -1,4 +1,4 @@
-var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate", "ngMessages", "ngPassword", "angular-humanize-duration"]);
+var yaqaap = angular.module("yaqaap", ["ngRoute", "ngSanitize", "ngAnimate", "ngMessages", "ngPassword", "angular-humanize-duration", "ngCookies"]);
 
 yaqaap.config([
     "$routeProvider", "$locationProvider",
@@ -20,6 +20,10 @@ yaqaap.config([
                 templateUrl: "/Content/_SignIn.html",
                 controller: "signInController"
             })
+            .when("/Disconnect", {
+                templateUrl: "/Content/_SignIn.html",
+                controller: "signInController"
+            })
             .when("/Register", {
                 templateUrl: "/Content/_Register.html",
                 controller: "registerController"
@@ -37,7 +41,7 @@ yaqaap.config([
     }
 ]);
 
-yaqaap.service("$authService", ["$http", "$location", authService]);
+yaqaap.service("$authService", ["$http", "$location", "$cookies", authService]);
 
 
 yaqaap.controller("yaqaapController", ["$scope", "$route", "$routeParams", "$authService", "$location", yaqaapController]);
@@ -49,18 +53,23 @@ yaqaap.controller("userController", ["$scope", "$http", "$route", "$routeParams"
 yaqaap.controller("searchController", ["$scope", "$http", "$location", "$authService", searchController]);
 
 
-function authService($http, $location) {
+function authService($http, $location, $cookies) {
 
     this.isAuth = function () {
         return this.userId != undefined;
     }
 
     this.getUserId = function () {
+
+        if (this.userId == undefined)
+            this.userId = $cookies.get('userId');
+
         return this.userId;
     };
 
     this.setUserId = function (userId) {
         this.userId = userId;
+        $cookies.put('userId', userId);
     };
 
     this.signIn = function(username, password) {
@@ -103,6 +112,8 @@ function authService($http, $location) {
                           }
                       });
     };
+
+    this.getUserId();
 };
 
 function yaqaapController($scope, $route, $routeParams, $authService, $location) {
@@ -125,8 +136,7 @@ function signInController($scope, $http, $authService, $location) {
     $scope.password = undefined;
 
     if ($authService.getUserId() != undefined) {
-        $location.path("/");
-        return;
+        $authService.setUserId(undefined);
     }
 
     $scope.signin = function () {
