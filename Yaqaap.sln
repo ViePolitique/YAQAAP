@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap", "Yaqaap\Yaqaap.csproj", "{F629D809-91A0-469A-8C82-E6E23B174B71}"
 EndProject
@@ -12,6 +12,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Tests", "Yaqaap.Tests\Yaqaap.Tests.csproj", "{001D6711-3171-4162-8D0F-542D447ADF13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Framework", "Yaqaap.Framework\Yaqaap.Framework.csproj", "{01922E2A-FE9E-4C4D-9B17-6E595A7445E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A84B110-CAF2-4348-9C10-FEB25C84100B}"
+	ProjectSection(SolutionItems) = preProject
+		gulpfile.js = gulpfile.js
+		package.json = package.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
