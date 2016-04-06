@@ -68,14 +68,14 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Handling .NET Web Application deployment.
 
 :: 0 Install NPM
-IF EXIST "%DEPLOYMENT_SOURCE%\packages.config" (
+IF EXIST "%DEPLOYMENT_SOURCE%\packages.json" (
   pushd %DEPLOYMENT_SOURCE%
   echo Installing NPM
   call npm install -g
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 ) ELSE (
-  echo %DEPLOYMENT_SOURCE%\packages.config.js
+  echo %DEPLOYMENT_SOURCE%\packages.json
   goto error
 )
 
