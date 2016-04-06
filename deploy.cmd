@@ -68,17 +68,17 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Handling .NET Web Application deployment.
 
 :: 0 Gulp
-IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
-  echo Installing NPM
-  call npm install
+REM IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
+  REM echo Installing NPM
+  REM call npm install
   
-  echo Execute Gulp
-  call gulp
-  IF !ERRORLEVEL! NEQ 0 goto error
-) ELSE (
-  echo %DEPLOYMENT_TARGET%\gulpfile.js
-  goto error
-)
+  REM echo Execute Gulp
+  REM call gulp
+  REM IF !ERRORLEVEL! NEQ 0 goto error
+REM ) ELSE (
+  REM echo %DEPLOYMENT_TARGET%\gulpfile.js
+  REM goto error
+REM )
 
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
