@@ -67,18 +67,15 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling .NET Web Application deployment.
 
-:: 0 Gulp
-IF EXIST "%DEPLOYMENT_SOURCE%\gulpfile.js" (
+:: 0 Install NPM
+IF EXIST "%DEPLOYMENT_SOURCE%\packages.config" (
   pushd %DEPLOYMENT_SOURCE%
   echo Installing NPM
-  call npm install
-  
-  echo Execute Gulp
-  call gulp
+  call npm install -g
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 ) ELSE (
-  echo %DEPLOYMENT_SOURCE%\gulpfile.js
+  echo %DEPLOYMENT_SOURCE%\packages.config.js
   goto error
 )
 
@@ -101,6 +98,18 @@ IF !ERRORLEVEL! NEQ 0 goto error
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
   IF !ERRORLEVEL! NEQ 0 goto error
+)
+
+:: 4. Install NPM
+IF EXIST "%DEPLOYMENT_TEMP%\gulpfile.js" (
+  pushd %DEPLOYMENT_TEMP%
+  echo Execute gulp
+  call gulp
+  IF !ERRORLEVEL! NEQ 0 goto error
+  popd
+) ELSE (
+  echo %DEPLOYMENT_TEMP%\packages.config.js
+  goto error
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -15,7 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Framework", "Yaqaap.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{041AD554-A04D-462C-B4E5-526AC253489D}"
 	ProjectSection(SolutionItems) = preProject
-		Yaqaap\gulpfile.js = Yaqaap\gulpfile.js
 		Yaqaap\package.json = Yaqaap\package.json
 	EndProjectSection
 EndProject
