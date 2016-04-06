@@ -113,7 +113,9 @@
     <Content Include="Content\_User.html" />
     <Content Include="Global.asax" />
     <Content Include="Content\controller.js" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -135,7 +137,9 @@
     <Content Include="Content\_NotFound.html" />
     <Content Include="bower.json" />
     <Content Include=".bowerrc" />
-    <Content Include="package.json" />
+    <None Include="package.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\PublishProfiles\Yaqaap.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
