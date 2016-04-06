@@ -75,6 +75,9 @@ IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
   echo Execute Gulp
   call Gulp
   IF !ERRORLEVEL! NEQ 0 goto error
+) ELSE (
+  echo %DEPLOYMENT_TARGET%\gulpfile.js
+  goto error
 )
 
 :: 1. Restore NuGet packages
