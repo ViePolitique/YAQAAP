@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Tests", "Yaqaap.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaqaap.Framework", "Yaqaap.Framework\Yaqaap.Framework.csproj", "{01922E2A-FE9E-4C4D-9B17-6E595A7445E0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{041AD554-A04D-462C-B4E5-526AC253489D}"
+	ProjectSection(SolutionItems) = preProject
+		Yaqaap\gulpfile.js = Yaqaap\gulpfile.js
+		Yaqaap\package.json = Yaqaap\package.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

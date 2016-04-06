@@ -8,7 +8,7 @@ gulp.task('default',['Bower'], function () { });
 
 gulp.task('Bower', function () {
 
-    gulp.src(['./bower.json']).pipe(install());
+    gulp.src(['./Yaqaap/bower.json']).pipe(install());
 
 });
 
