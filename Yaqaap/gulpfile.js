@@ -4,11 +4,11 @@ var gutil = require('gulp-util');
 var install = require("gulp-install");
 
 /* global gulp */
-gulp.task('default',['NPM'], function () { });
+gulp.task('default',['Bower'], function () { });
 
-gulp.task('NPM', function () {
+gulp.task('Bower', function () {
 
-    gulp.src(['./package.json', './Yaqaap/bower.json']).pipe(install());
+    gulp.src(['./bower.json']).pipe(install());
 
 });
 

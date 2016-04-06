@@ -69,11 +69,11 @@ echo Handling .NET Web Application deployment.
 
 :: 0 Gulp
 IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
-  echo Installing Gulp
-  call npm install gulp -g --silent
+  echo Installing NPM
+  call npm install
   
   echo Execute Gulp
-  call Gulp
+  call gulp
   IF !ERRORLEVEL! NEQ 0 goto error
 ) ELSE (
   echo %DEPLOYMENT_TARGET%\gulpfile.js
