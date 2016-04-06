@@ -85,7 +85,7 @@ IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. Install NPM
 IF EXIST "%DEPLOYMENT_TEMP%\package.json" (
-  pushd %DEPLOYMENT_TEMP%
+  pushd "%DEPLOYMENT_TEMP%"
   echo Installing NPM
   call npm install
   IF !ERRORLEVEL! NEQ 0 goto error
@@ -101,7 +101,7 @@ IF EXIST "%DEPLOYMENT_TEMP%\package.json" (
 
 :: 3. Call gulp
 IF EXIST "%DEPLOYMENT_TEMP%\gulpfile.js" (
-  pushd %DEPLOYMENT_TEMP%
+  pushd "%DEPLOYMENT_TEMP%"
   echo Execute gulp
   call gulp
   IF !ERRORLEVEL! NEQ 0 goto error
