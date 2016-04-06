@@ -67,13 +67,14 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling .NET Web Application deployment.
 
-:: 0 install bower
-IF EXIST "%DEPLOYMENT_TARGET%\bower.json" (
-  echo Execute Bower
-  pushd "%DEPLOYMENT_TARGET%"
-  call bower install
+:: 0 Gulp
+IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
+  echo Installing Gulp
+  call npm install gulp -g --silent
+  
+  echo Execute Gulp
+  call Gulp
   IF !ERRORLEVEL! NEQ 0 goto error
-  popd
 )
 
 :: 1. Restore NuGet packages
