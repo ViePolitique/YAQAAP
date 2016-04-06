@@ -67,7 +67,12 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling .NET Web Application deployment.
 
-
+:: 0
+:: 3. Install NPM
+echo Installing gulp-cli
+npm install --global gulp-cli
+IF !ERRORLEVEL! NEQ 0 goto error
+  
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
   call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\Yaqaap.sln"
@@ -88,10 +93,6 @@ IF EXIST "%DEPLOYMENT_TEMP%\package.json" (
   pushd "%DEPLOYMENT_TEMP%"
   echo Installing NPM
   call npm install
-  IF !ERRORLEVEL! NEQ 0 goto error
-  
-  echo Installing gulp-cli
-  npm install --global gulp-cli
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 ) ELSE (
