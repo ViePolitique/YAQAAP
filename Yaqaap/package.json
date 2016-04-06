@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Filimindji/YAQAAP#readme",
   "devDependencies": {
-    "gulp": "~3.9.1",
+    "gulp": "^3.9.1",
     "gulp-install": "^0.6.0",
     "gulp-util": "^3.0.7"
   }
