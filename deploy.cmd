@@ -89,6 +89,8 @@ IF EXIST "%DEPLOYMENT_TEMP%\package.json" (
   echo Installing NPM
   call npm install
   IF !ERRORLEVEL! NEQ 0 goto error
+  npm install --global gulp-cli
+  IF !ERRORLEVEL! NEQ 0 goto error
   popd
 ) ELSE (
   echo %DEPLOYMENT_TEMP%\package.json
