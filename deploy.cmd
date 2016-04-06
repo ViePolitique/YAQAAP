@@ -67,17 +67,6 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 
 echo Handling .NET Web Application deployment.
 
-:: 0 Install NPM
-IF EXIST "%DEPLOYMENT_SOURCE%\package.json" (
-  pushd %DEPLOYMENT_SOURCE%
-  echo Installing NPM
-  call npm install -g
-  IF !ERRORLEVEL! NEQ 0 goto error
-  popd
-) ELSE (
-  echo %DEPLOYMENT_SOURCE%\package.json
-  goto error
-)
 
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
@@ -94,25 +83,35 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 
 IF !ERRORLEVEL! NEQ 0 goto error
 
-
-:: 3. KuduSync
-IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+:: 3. Install NPM
+IF EXIST "%DEPLOYMENT_TEMP%\package.json" (
+  pushd %DEPLOYMENT_TEMP%
+  echo Installing NPM
+  call npm install
   IF !ERRORLEVEL! NEQ 0 goto error
+  popd
+) ELSE (
+  echo %DEPLOYMENT_TEMP%\package.json
+  goto error
 )
 
-:: 4. Call gulp
-IF EXIST "%DEPLOYMENT_TARGET%\gulpfile.js" (
-  pushd %DEPLOYMENT_TARGET%
+:: 3. Call gulp
+IF EXIST "%DEPLOYMENT_TEMP%\gulpfile.js" (
+  pushd %DEPLOYMENT_TEMP%
   echo Execute gulp
   call gulp
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 ) ELSE (
-  echo %DEPLOYMENT_TARGET%\packages.config.js
+  echo %DEPLOYMENT_TEMP%\gulpfile.js
   goto error
 )
 
+:: 4. KuduSync
+IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
+  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+  IF !ERRORLEVEL! NEQ 0 goto error
+)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
