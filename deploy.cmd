@@ -69,7 +69,8 @@ echo Handling .NET Web Application deployment.
 
 :: 0 Install NPM
 echo Installing gulp-cli
-npm install --global gulp-cli
+call npm install --global gulp-cli
+IF !ERRORLEVEL! NEQ 0 goto error
   
 :: 1. Restore NuGet packages
 IF /I "Yaqaap.sln" NEQ "" (
